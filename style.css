@@ -261,7 +261,7 @@ nav {
   .hamburger { display: flex; }
 }
 
-/* ── GALLERY STRIP FIXE BREITE UND HÖHE ── */
+/* ── GALLERY STRIP FIXE BREITE, HÖHE + PLATZHALTER ── */
 .gallery-strip {
   display: flex;
   gap: 10px;
@@ -282,12 +282,13 @@ nav {
 
 .gallery-img {
   flex: 0 0 180px;   /* feste Breite */
-  height: 270px;      /* 3x so hoch wie vorher (90px x 3) */
+  height: 270px;      /* 3x so hoch wie vorher */
   border-radius: 4px;
   overflow: hidden;
   position: relative;
 }
 
+/* Bild-Styling */
 .gallery-img img {
   width: 100%;
   height: 100%;
@@ -300,7 +301,23 @@ nav {
   transform: scale(1.05);
 }
 
-/* Platzhalter-Divs deaktivieren */
+/* Platzhalter-Div wieder sichtbar machen */
 .img-placeholder {
-  display: none;
+  background: var(--mid);
+  border: 1px solid rgba(201,169,110,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  gap: 0.8rem;
+  width: 100%;
+  height: 100%;
+}
+
+.img-placeholder svg {
+  opacity: 0.3;
 }
