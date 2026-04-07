@@ -261,26 +261,7 @@ nav {
   .hamburger { display: flex; }
 }
 
-/* ── GALLERY STRIP ── */
-.gallery-strip {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 1rem 5vw;
-}
-
-.gallery-strip::-webkit-scrollbar {
-  height: 6px;
-}
-.gallery-strip::-webkit-scrollbar-thumb {
-  background: var(--gold);
-  border-radius: 3px;
-}
-.gallery-strip::-webkit-scrollbar-track {
-  background: rgba(255,255,255,0.05);
-}
-
-/* ── GALLERY STRIP (kompakter) ── */
+/* ── GALLERY STRIP KOMPAKT ── */
 .gallery-strip {
   display: flex;
   gap: 10px;
@@ -300,10 +281,10 @@ nav {
 }
 
 .gallery-img {
-  flex: 0 0 120px;  /* kleiner als vorher */
-  height: 90px;     /* kompakter */
-  overflow: hidden;
+  flex: 0 0 120px;   /* Breite 120px */
+  height: 90px;      /* Höhe 90px */
   border-radius: 4px;
+  overflow: hidden;
   position: relative;
 }
 
@@ -317,4 +298,9 @@ nav {
 
 .gallery-img:hover img {
   transform: scale(1.05);
+}
+
+/* Entferne die Platzhalter-Divs */
+.img-placeholder {
+  display: none;
 }
