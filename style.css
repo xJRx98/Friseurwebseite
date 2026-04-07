@@ -261,7 +261,7 @@ nav {
   .hamburger { display: flex; }
 }
 
-/* ── GALLERY STRIP KOMPAKT ── */
+/* ── GALLERY STRIP FIXE BREITE UND HÖHE ── */
 .gallery-strip {
   display: flex;
   gap: 10px;
@@ -281,8 +281,8 @@ nav {
 }
 
 .gallery-img {
-  flex: 0 0 120px;   /* Breite 120px */
-  height: 90px;      /* Höhe 90px */
+  flex: 0 0 180px;   /* feste Breite */
+  height: 270px;      /* 3x so hoch wie vorher (90px x 3) */
   border-radius: 4px;
   overflow: hidden;
   position: relative;
@@ -300,7 +300,7 @@ nav {
   transform: scale(1.05);
 }
 
-/* Entferne die Platzhalter-Divs */
+/* Platzhalter-Divs deaktivieren */
 .img-placeholder {
   display: none;
 }
