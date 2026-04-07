@@ -280,9 +280,28 @@ nav {
   background: rgba(255,255,255,0.05);
 }
 
+/* ── GALLERY STRIP (kompakter) ── */
+.gallery-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 1rem 5vw;
+}
+
+.gallery-strip::-webkit-scrollbar {
+  height: 6px;
+}
+.gallery-strip::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 3px;
+}
+.gallery-strip::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+}
+
 .gallery-img {
-  flex: 0 0 200px;
-  height: 150px;
+  flex: 0 0 120px;  /* kleiner als vorher */
+  height: 90px;     /* kompakter */
   overflow: hidden;
   border-radius: 4px;
   position: relative;
