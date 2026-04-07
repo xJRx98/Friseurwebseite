@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Termin buchen – [Salonname]</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .booking-layout {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    /* STEPPER */
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 3rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex: 1;
+    }
+
+    .step:last-child { flex: 0; }
+
+    .step-circle {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,169,110,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .step.active .step-circle {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .step.done .step-circle {
+      background: rgba(201,169,110,0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .step-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .step.active .step-label { color: var(--text); }
+
+    .step-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(201,169,110,0.2);
+      margin: 0 0.5rem;
+    }
+
+    /* FORM */
+    .booking-panel {
+      background: var(--mid);
+      border: 1px solid rgba(201,169,110,0.12);
+      padding: 2.5rem;
+    }
+
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--dark);
+      border: 1px solid rgba(201,169,110,0.2);
+      color: var(--text);
+      padding: 0.85rem 1rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.3s;
+      appearance: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--gold);
+    }
+
+    select option { background: var(--dark); }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+    }
+
+    .time-slot {
+      border: 1px solid rgba(201,169,110,0.2);
+      background: transparent;
+      color: var(--text-muted);
+      padding: 0.6rem 0.4rem;
+      font-size: 0.8rem;
+      font-family: 'Jost', sans-serif;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .time-slot:hover { border-color: var(--gold); color: var(--text); }
+
+    .time-slot.selected {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--dark);
+    }
+
+    .time-slot.unavailable {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .form-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .btn-back {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-muted);
+      padding: 0.8rem 1.5rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-back:hover { border-color: var(--text-muted); color: var(--text); }
+
+    .btn-next {
+      background: var(--gold);
+      border: none;
+      color: var(--dark);
+      padding: 0.9rem 2rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-next:hover { background: var(--gold-light); }
+
+    /* SUMMARY SIDEBAR */
+    .booking-sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + 2rem);
+    }
+
+    .sidebar-card {
+      background: var(--black);
+      border: 1px solid rgba(201,169,110,0.12);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    .sidebar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.85rem;
+    }
+
+    .sidebar-row:last-child { border-bottom: none; }
+
+    .sidebar-row-label { color: var(--text-muted); }
+
+    .sidebar-row-value { color: var(--text); text-align: right; }
+
+    .sidebar-placeholder {
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 0.82rem;
+    }
+
+    .opening-note {
+      background: rgba(201,169,110,0.06);
+      border-left: 2px solid var(--gold);
+      padding: 1rem 1.2rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* Success */
+    .success-message {
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .success-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(201,169,110,0.1);
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    /* Alternative booking options */
+    .alt-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .alt-option {
+      border: 1px solid rgba(201,169,110,0.15);
+      padding: 1.5rem;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.3s, background 0.3s;
+      display: block;
+    }
+
+    .alt-option:hover {
+      border-color: rgba(201,169,110,0.4);
+      background: rgba(201,169,110,0.04);
+    }
+
+    .alt-option-icon { font-size: 1.5rem; display: block; margin-bottom: 0.5rem; }
+
+    .alt-option-title { font-size: 0.82rem; color: var(--text); margin-bottom: 0.2rem; }
+
+    .alt-option-sub { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Online booking embed note */
+    .online-booking-embed {
+      background: var(--mid);
+      border: 1px solid rgba(201,169,110,0.15);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .booking-layout {
+        grid-template-columns: 1fr;
+      }
+      .booking-sidebar { position: static; }
+    }
+
+    @media (max-width: 480px) {
+      .time-grid { grid-template-columns: repeat(3, 1fr); }
+      .alt-options { grid-template-columns: 1fr; }
+      .stepper .step-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">[Salonname]</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="leistungen.html">Leistungen & Preise</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="galerie.html">Galerie</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+      <li><a href="termin.html" class="nav-cta active">Termin buchen</a></li>
+    </ul>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menü">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-hero">
+      <p class="section-label">Ihr nächster Termin</p>
+      <h1 class="section-title">Jetzt <em>Termin</em> buchen</h1>
+      <div class="divider center"></div>
+    </div>
+
+    <section>
+      <div class="booking-layout">
+
+        <!-- FORM COLUMN -->
+        <div>
+          <!-- STEPPER -->
+          <div class="stepper" id="stepper">
+            <div class="step active" id="step-indicator-1">
+              <div class="step-circle">1</div>
+              <span class="step-label">Leistung</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step-indicator-2">
+              <div class="step-circle">2</div>
+              <span class="step-label">Termin</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step-indicator-3">
+              <div class="step-circle">3</div>
+              <span class="step-label">Ihre Daten</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step-indicator-4">
+              <div class="step-circle">4</div>
+              <span class="step-label">Bestätigung</span>
+            </div>
+          </div>
+
+          <!-- OPTION: Online-Buchungstool einbetten -->
+          <!--
+          <div class="online-booking-embed">
+            <p class="section-label" style="text-align:center">Online Buchung</p>
+            <p style="color:var(--text-muted); margin-bottom:1.5rem; font-size:0.85rem;">
+              Buchen Sie Ihren Termin direkt über unser Online-Buchungssystem:
+            </p>
+            [Hier Online-Buchungs-Widget einfügen, z. B. Treatwell, Booksy, Shore, Timify o. ä.]
+            <iframe src="[BOOKING-SYSTEM-URL]" width="100%" height="600" frameborder="0"></iframe>
+          </div>
+          -->
+
+          <!-- STEP 1: Leistung -->
+          <div class="form-step active" id="step1">
+            <h2 class="section-title" style="font-size:1.5rem; margin-bottom:0.5rem;">Welche Leistung?</h2>
+            <div class="divider" style="margin-bottom:1.5rem;"></div>
+
+            <div class="form-group">
+              <label for="stylist">Stylist/in wählen</label>
+              <select id="stylist" onchange="updateSummary()">
+                <option value="">Kein Wunsch (freie Auswahl)</option>
+                <option value="[Name 1]">[Vorname Nachname 1]</option>
+                <option value="[Name 2]">[Vorname Nachname 2]</option>
+                <option value="[Name 3]">[Vorname Nachname 3]</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="service">Leistung</label>
+              <select id="service" onchange="updateSummary()">
+                <option value="">Bitte wählen …</option>
+                <optgroup label="Schnitt & Styling">
+                  <option value="Damen – Waschen, Schneiden, Föhnen">Damen – Waschen, Schneiden, Föhnen</option>
+                  <option value="Herren – Waschen & Schneiden">Herren – Waschen & Schneiden</option>
+                  <option value="Kinder (bis 12 Jahre)">Kinder (bis 12 Jahre)</option>
+                </optgroup>
+                <optgroup label="Farbe">
+                  <option value="Vollcoloration">Vollcoloration</option>
+                  <option value="Balayage / Ombré">Balayage / Ombré</option>
+                  <option value="Highlights">Highlights</option>
+                  <option value="Tönung / Glossing">Tönung / Glossing</option>
+                </optgroup>
+                <optgroup label="Pflege">
+                  <option value="Tiefenpflege-Kur">Tiefenpflege-Kur</option>
+                  <option value="Olaplex-Behandlung">Olaplex-Behandlung</option>
+                </optgroup>
+                <optgroup label="Braut & Event">
+                  <option value="Brautfrisur inkl. Probe">Brautfrisur inkl. Probe</option>
+                  <option value="Hochsteckfrisur (Event)">Hochsteckfrisur (Event)</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="notes-service">Hinweise zur Leistung (optional)</label>
+              <textarea id="notes-service" placeholder="Z. B. Haarlänge, besondere Wünsche …"></textarea>
+            </div>
+
+            <div class="form-nav">
+              <span></span>
+              <button class="btn-next" onclick="goToStep(2)">Weiter zur Terminwahl →</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Datum & Uhrzeit -->
+          <div class="form-step" id="step2">
+            <h2 class="section-title" style="font-size:1.5rem; margin-bottom:0.5rem;">Wann soll es sein?</h2>
+            <div class="divider" style="margin-bottom:1.5rem;"></div>
+
+            <div class="form-group">
+              <label for="date">Wunschdatum</label>
+              <input type="date" id="date" onchange="updateSummary(); generateTimeSlots()">
+            </div>
+
+            <div class="form-group">
+              <label>Uhrzeit wählen</label>
+              <div class="time-grid" id="timeGrid">
+                <!-- Zeitslots werden via JS generiert -->
+              </div>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.8rem;">
+                Ausgegraut = bereits belegt. Tatsächliche Verfügbarkeit wird nach Anfrage bestätigt.
+              </p>
+            </div>
+
+            <div class="form-nav">
+              <button class="btn-back" onclick="goToStep(1)">← Zurück</button>
+              <button class="btn-next" onclick="goToStep(3)">Weiter zu Ihren Daten →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Kontaktdaten -->
+          <div class="form-step" id="step3">
+            <h2 class="section-title" style="font-size:1.5rem; margin-bottom:0.5rem;">Ihre Angaben</h2>
+            <div class="divider" style="margin-bottom:1.5rem;"></div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+              <div class="form-group">
+                <label for="firstname">Vorname*</label>
+                <input type="text" id="firstname" placeholder="[Vorname]" oninput="updateSummary()">
+              </div>
+              <div class="form-group">
+                <label for="lastname">Nachname*</label>
+                <input type="text" id="lastname" placeholder="[Nachname]" oninput="updateSummary()">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Telefon*</label>
+              <input type="tel" id="phone" placeholder="[+49 ...]">
+            </div>
+
+            <div class="form-group">
+              <label for="email">E-Mail</label>
+              <input type="email" id="email" placeholder="[[email@beispiel.de]]">
+            </div>
+
+            <div class="form-group">
+              <label for="message">Nachricht (optional)</label>
+              <textarea id="message" placeholder="Weitere Wünsche oder Hinweise …"></textarea>
+            </div>
+
+            <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.7; margin-bottom:1rem;">
+              * Pflichtfelder. Ihre Daten werden ausschließlich zur Terminbearbeitung verwendet. Weitere Infos in unserer <a href="datenschutz.html" style="color:var(--gold);">Datenschutzerklärung</a>.
+            </div>
+
+            <div class="form-nav">
+              <button class="btn-back" onclick="goToStep(2)">← Zurück</button>
+              <button class="btn-next" onclick="submitForm()">Terminanfrage senden ✓</button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Bestätigung -->
+          <div class="form-step" id="step4">
+            <div class="success-message">
+              <div class="success-icon">
+                <svg width="28" height="28" fill="none" stroke="var(--gold)" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+              </div>
+              <h2 class="section-title" style="font-size:1.8rem;">Anfrage gesendet!</h2>
+              <p style="color:var(--text-muted); max-width:400px; margin:1rem auto 2rem; font-size:0.9rem;">
+                Vielen Dank, <strong id="confirmName" style="color:var(--text);">[Name]</strong>! Wir haben Ihre Terminanfrage erhalten und melden uns so bald wie möglich zur Bestätigung.
+              </p>
+              <a href="index.html" class="btn-outline">Zurück zur Startseite</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="booking-sidebar">
+          <div class="sidebar-card">
+            <div class="sidebar-title">Ihre Auswahl</div>
+            <div class="sidebar-row">
+              <span class="sidebar-row-label">Leistung</span>
+              <span class="sidebar-row-value" id="sum-service"><em class="sidebar-placeholder">–</em></span>
+            </div>
+            <div class="sidebar-row">
+              <span class="sidebar-row-label">Stylist/in</span>
+              <span class="sidebar-row-value" id="sum-stylist"><em class="sidebar-placeholder">Keine Auswahl</em></span>
+            </div>
+            <div class="sidebar-row">
+              <span class="sidebar-row-label">Datum</span>
+              <span class="sidebar-row-value" id="sum-date"><em class="sidebar-placeholder">–</em></span>
+            </div>
+            <div class="sidebar-row">
+              <span class="sidebar-row-label">Uhrzeit</span>
+              <span class="sidebar-row-value" id="sum-time"><em class="sidebar-placeholder">–</em></span>
+            </div>
+            <div class="sidebar-row">
+              <span class="sidebar-row-label">Name</span>
+              <span class="sidebar-row-value" id="sum-name"><em class="sidebar-placeholder">–</em></span>
+            </div>
+          </div>
+
+          <div class="opening-note">
+            <strong style="color:var(--gold); font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase;">Öffnungszeiten</strong><br>
+            Di – Fr: [9:00 – 18:00] Uhr<br>
+            Do: [9:00 – 20:00] Uhr<br>
+            Sa: [9:00 – 15:00] Uhr<br>
+            Mo & So: Geschlossen
+          </div>
+
+          <div style="margin-top:1.5rem;">
+            <div class="sidebar-title" style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.8rem;">Oder direkt kontaktieren</div>
+            <div class="alt-options">
+              <a href="tel:[Telefonnummer]" class="alt-option">
+                <span class="alt-option-icon">📞</span>
+                <div class="alt-option-title">Anrufen</div>
+                <div class="alt-option-sub">[Telefonnummer]</div>
+              </a>
+              <a href="https://wa.me/[WhatsApp-Nummer]" target="_blank" class="alt-option">
+                <span class="alt-option-icon">💬</span>
+                <div class="alt-option-title">WhatsApp</div>
+                <div class="alt-option-sub">Direkt schreiben</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <span class="footer-logo">[Salonname]</span>
+        <p class="footer-desc">[Kurze Beschreibung des Salons.]</p>
+      </div>
+      <div>
+        <div class="footer-title">Navigation</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="leistungen.html">Leistungen & Preise</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="galerie.html">Galerie</a></li>
+          <li><a href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Kontakt</div>
+        <ul class="footer-links">
+          <li><a href="tel:[Telefonnummer]">[Telefonnummer]</a></li>
+          <li><a href="mailto:[E-Mail]">[E-Mail-Adresse]</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Rechtliches</div>
+        <ul class="footer-links">
+          <li><a href="impressum.html">Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© [Jahr] [Salonname] · Alle Rechte vorbehalten</span>
+    </div>
+  </footer>
+
+  <script>
+    let currentStep = 1;
+    let selectedTime = '';
+
+    // Set min date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').min = today;
+
+    function goToStep(n) {
+      document.getElementById('step' + currentStep).classList.remove('active');
+      document.getElementById('step-indicator-' + currentStep).classList.remove('active');
+      document.getElementById('step-indicator-' + currentStep).classList.add('done');
+      currentStep = n;
+      document.getElementById('step' + currentStep).classList.add('active');
+      document.getElementById('step-indicator-' + currentStep).classList.add('active');
+      document.getElementById('step-indicator-' + currentStep).classList.remove('done');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function generateTimeSlots() {
+      const grid = document.getElementById('timeGrid');
+      grid.innerHTML = '';
+      const slots = ['9:00','9:30','10:00','10:30','11:00','11:30','12:00','12:30',
+                     '13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30',
+                     '17:00','17:30'];
+      // Example: some slots unavailable
+      const unavailable = ['10:00','11:30','14:00'];
+      slots.forEach(t => {
+        const btn = document.createElement('button');
+        btn.className = 'time-slot' + (unavailable.includes(t) ? ' unavailable' : '');
+        btn.textContent = t;
+        btn.type = 'button';
+        if (!unavailable.includes(t)) {
+          btn.onclick = function() {
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedTime = t;
+            updateSummary();
+          };
+        }
+        grid.appendChild(btn);
+      });
+    }
+
+    function updateSummary() {
+      const service = document.getElementById('service').value;
+      const stylist = document.getElementById('stylist').value;
+      const date = document.getElementById('date').value;
+      const first = document.getElementById('firstname').value;
+      const last = document.getElementById('lastname').value;
+
+      document.getElementById('sum-service').innerHTML = service || '<em class="sidebar-placeholder">–</em>';
+      document.getElementById('sum-stylist').innerHTML = stylist || '<em class="sidebar-placeholder">Keine Auswahl</em>';
+
+      if (date) {
+        const d = new Date(date);
+        document.getElementById('sum-date').textContent = d.toLocaleDateString('de-DE', {weekday:'short', day:'2-digit', month:'long', year:'numeric'});
+      } else {
+        document.getElementById('sum-date').innerHTML = '<em class="sidebar-placeholder">–</em>';
+      }
+
+      document.getElementById('sum-time').innerHTML = selectedTime || '<em class="sidebar-placeholder">–</em>';
+      const name = [first, last].filter(Boolean).join(' ');
+      document.getElementById('sum-name').innerHTML = name || '<em class="sidebar-placeholder">–</em>';
+    }
+
+    function submitForm() {
+      const first = document.getElementById('firstname').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      if (!first || !phone) {
+        alert('Bitte füllen Sie mindestens Vorname und Telefonnummer aus.');
+        return;
+      }
+      document.getElementById('confirmName').textContent = first;
+      goToStep(4);
+    }
+
+    // Init time slots
+    generateTimeSlots();
+  </script>
+</body>
+</html>

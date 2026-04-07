@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontakt – [Salonname]</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-method {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .contact-method:last-child { border-bottom: none; }
+
+    .contact-method-icon {
+      width: 44px; height: 44px;
+      border: 1px solid rgba(201,169,110,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+    }
+
+    .contact-method-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+
+    .contact-method-value {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      display: block;
+      transition: color 0.3s;
+    }
+
+    .contact-method-value:hover { color: var(--gold); }
+
+    .contact-method-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* FORM */
+    .form-group {
+      margin-bottom: 1.4rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--mid);
+      border: 1px solid rgba(201,169,110,0.15);
+      color: var(--text);
+      padding: 0.9rem 1rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.3s;
+      appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+    }
+
+    textarea { resize: vertical; min-height: 130px; }
+
+    .submit-btn {
+      background: var(--gold);
+      border: none;
+      color: var(--dark);
+      padding: 1rem 2.5rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .submit-btn:hover { background: var(--gold-light); }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.3rem 2rem;
+    }
+
+    .hour-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.85rem;
+    }
+
+    .hour-row .day { color: var(--text); }
+    .hour-row .time { color: var(--text-muted); }
+    .hour-row.today .day,
+    .hour-row.today .time { color: var(--gold); }
+
+    .map-container {
+      width: 100%;
+      height: 340px;
+      border: 1px solid rgba(201,169,110,0.12);
+      overflow: hidden;
+      margin-top: 3rem;
+      filter: grayscale(0.5) contrast(1.1);
+    }
+
+    .map-container .img-placeholder { height: 100%; }
+
+    @media (max-width: 800px) {
+      .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .hours-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">[Salonname]</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="leistungen.html">Leistungen & Preise</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="galerie.html">Galerie</a></li>
+      <li><a href="kontakt.html" class="active">Kontakt</a></li>
+      <li><a href="termin.html" class="nav-cta">Termin buchen</a></li>
+    </ul>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menü">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-hero">
+      <p class="section-label">Wir freuen uns auf Sie</p>
+      <h1 class="section-title">Kontakt &<br><em>Anfahrt</em></h1>
+      <div class="divider center"></div>
+    </div>
+
+    <section>
+      <div class="contact-layout">
+
+        <!-- LEFT: Contact info -->
+        <div class="fade-in">
+          <p class="section-label">So erreichen Sie uns</p>
+          <h2 class="section-title" style="font-size:2rem;">Immer <em>für Sie</em> da</h2>
+          <div class="divider"></div>
+
+          <div class="contact-method">
+            <div class="contact-method-icon">📍</div>
+            <div>
+              <div class="contact-method-title">Adresse</div>
+              <span class="contact-method-value">[Straße und Hausnummer]</span>
+              <span class="contact-method-value">[PLZ] [Stadt]</span>
+              <div class="contact-method-sub">[Wegbeschreibung oder Parkhinweis, z. B.: „2 Min. vom Hauptbahnhof, Parkplätze in der Tiefgarage [Name]"]</div>
+            </div>
+          </div>
+
+          <div class="contact-method">
+            <div class="contact-method-icon">📞</div>
+            <div>
+              <div class="contact-method-title">Telefon</div>
+              <a href="tel:[Telefonnummer]" class="contact-method-value">[Telefonnummer]</a>
+              <div class="contact-method-sub">Mo–Sa während der Öffnungszeiten</div>
+            </div>
+          </div>
+
+          <div class="contact-method">
+            <div class="contact-method-icon">📧</div>
+            <div>
+              <div class="contact-method-title">E-Mail</div>
+              <a href="mailto:[E-Mail-Adresse]" class="contact-method-value">[E-Mail-Adresse]</a>
+              <div class="contact-method-sub">Wir antworten innerhalb von 24 Stunden</div>
+            </div>
+          </div>
+
+          <div class="contact-method">
+            <div class="contact-method-icon">💬</div>
+            <div>
+              <div class="contact-method-title">WhatsApp</div>
+              <a href="https://wa.me/[WhatsApp-Nummer]" target="_blank" class="contact-method-value">WhatsApp schreiben →</a>
+              <div class="contact-method-sub">Schnell und unkompliziert</div>
+            </div>
+          </div>
+
+          <div class="contact-method">
+            <div class="contact-method-icon">📷</div>
+            <div>
+              <div class="contact-method-title">Instagram</div>
+              <a href="[Instagram-Link]" target="_blank" class="contact-method-value">@[instagramhandle]</a>
+              <div class="contact-method-sub">Aktuelle Inspirationen & Angebote</div>
+            </div>
+          </div>
+
+          <!-- HOURS -->
+          <div style="margin-top:3rem;">
+            <p class="section-label">Öffnungszeiten</p>
+            <div class="hours-grid">
+              <div>
+                <div class="hour-row"><span class="day">Montag</span><span class="time">[Geschlossen]</span></div>
+                <div class="hour-row"><span class="day">Dienstag</span><span class="time">[9:00 – 18:00]</span></div>
+                <div class="hour-row"><span class="day">Mittwoch</span><span class="time">[9:00 – 18:00]</span></div>
+                <div class="hour-row"><span class="day">Donnerstag</span><span class="time">[9:00 – 20:00]</span></div>
+              </div>
+              <div>
+                <div class="hour-row"><span class="day">Freitag</span><span class="time">[9:00 – 18:00]</span></div>
+                <div class="hour-row"><span class="day">Samstag</span><span class="time">[9:00 – 15:00]</span></div>
+                <div class="hour-row"><span class="day">Sonntag</span><span class="time">Geschlossen</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Contact form -->
+        <div class="fade-in" style="transition-delay:0.2s">
+          <p class="section-label">Schreiben Sie uns</p>
+          <h2 class="section-title" style="font-size:2rem;">Ihre <em>Nachricht</em></h2>
+          <div class="divider"></div>
+
+          <div id="contactForm">
+            <div class="form-group">
+              <label for="c-name">Ihr Name*</label>
+              <input type="text" id="c-name" placeholder="[Vorname Nachname]">
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+              <div class="form-group">
+                <label for="c-phone">Telefon</label>
+                <input type="tel" id="c-phone" placeholder="[+49 ...]">
+              </div>
+              <div class="form-group">
+                <label for="c-email">E-Mail*</label>
+                <input type="email" id="c-email" placeholder="[[email@...]]">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="c-subject">Betreff</label>
+              <select id="c-subject">
+                <option value="">Bitte wählen …</option>
+                <option>Terminanfrage</option>
+                <option>Preisanfrage</option>
+                <option>Allgemeine Frage</option>
+                <option>Braut- & Event-Styling</option>
+                <option>Sonstiges</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="c-message">Nachricht*</label>
+              <textarea id="c-message" placeholder="Wie können wir Ihnen helfen?"></textarea>
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.7;">
+              * Pflichtfelder. Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="datenschutz.html" style="color:var(--gold);">Datenschutzerklärung</a> zu.
+            </div>
+            <button class="submit-btn" onclick="submitContact()">Nachricht senden</button>
+          </div>
+
+          <div id="contactSuccess" style="display:none; text-align:center; padding:2rem 0;">
+            <div style="font-size:2.5rem; margin-bottom:1rem;">✓</div>
+            <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.5rem; margin-bottom:0.5rem;">Danke für Ihre Nachricht!</h3>
+            <p style="color:var(--text-muted); font-size:0.9rem;">Wir melden uns so bald wie möglich bei Ihnen.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAP -->
+      <div class="map-container fade-in" style="margin-top:5rem;">
+        <!-- Google Maps Embed hier einfügen: -->
+        <!-- <iframe src="https://www.google.com/maps/embed?pb=..."></iframe> -->
+        <div class="img-placeholder">
+          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          <span>Google Maps Embed hier einfügen<br><small style="font-size:0.75rem; opacity:0.6;">[Iframe-Code aus Google Maps „Karte einbetten" kopieren]</small></span>
+        </div>
+      </div>
+      <div style="text-align:right; margin-top:0.8rem;">
+        <a href="https://maps.google.com/?q=[Adresse]" target="_blank" style="font-size:0.78rem; color:var(--gold); text-decoration:none;">In Google Maps öffnen →</a>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <span class="footer-logo">[Salonname]</span>
+        <p class="footer-desc">[Kurze Beschreibung des Salons.]</p>
+      </div>
+      <div>
+        <div class="footer-title">Navigation</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="leistungen.html">Leistungen & Preise</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="galerie.html">Galerie</a></li>
+          <li><a href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Kontakt</div>
+        <ul class="footer-links">
+          <li><a href="tel:[Telefonnummer]">[Telefonnummer]</a></li>
+          <li><a href="mailto:[E-Mail]">[E-Mail-Adresse]</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">Rechtliches</div>
+        <ul class="footer-links">
+          <li><a href="impressum.html">Impressum</a></li>
+          <li><a href="datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© [Jahr] [Salonname] · Alle Rechte vorbehalten</span>
+    </div>
+  </footer>
+
+  <script>
+    function submitContact() {
+      const name = document.getElementById('c-name').value.trim();
+      const email = document.getElementById('c-email').value.trim();
+      const msg = document.getElementById('c-message').value.trim();
+      if (!name || !email || !msg) {
+        alert('Bitte füllen Sie alle Pflichtfelder aus.');
+        return;
+      }
+      document.getElementById('contactForm').style.display = 'none';
+      document.getElementById('contactSuccess').style.display = 'block';
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
