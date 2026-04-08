@@ -61,7 +61,12 @@
       overflow: hidden;
     }
 
-    .gallery-img .img-placeholder { height: 100%; min-height: 220px; }
+    .gallery-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
     .gallery-img:first-child {
       grid-row: span 2;
@@ -117,6 +122,13 @@
       aspect-ratio: 3/4;
       margin-bottom: 1.2rem;
       overflow: hidden;
+    }
+
+    .team-member-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .team-member-name {
@@ -183,6 +195,19 @@
     }
 
     .btn-dark:hover { background: var(--black); }
+
+    /* About-Bild */
+    .about-img-wrap {
+      height: 460px;
+      overflow: hidden;
+    }
+
+    .about-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
     @media (max-width: 900px) {
       .services-grid { grid-template-columns: 1fr 1fr; }
@@ -281,12 +306,8 @@
         <a href="team.html" class="btn-outline">Unser Team kennenlernen</a>
       </div>
       <div class="fade-in" style="transition-delay:0.2s">
-        <div class="img-placeholder" style="height: 460px;">
-          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-            <path d="m21 15-5-5L5 21"/>
-          </svg>
-          <span>[Salonfoto einfügen]</span>
+        <div class="about-img-wrap">
+          <img src="images/salon.jpg" alt="Unser Salon" loading="lazy">
         </div>
       </div>
     </div>
@@ -299,19 +320,19 @@
       <h2 class="section-title" style="text-align:center">Unsere <em>Arbeit</em></h2>
     </div>
     <div class="gallery-strip">
-  <div class="gallery-img">
-    <img src="images/bild1.png" alt="Bild 1" loading="lazy">
-  </div>
-  <div class="gallery-img">
-    <img src="images/bild2.png" alt="Bild 2" loading="lazy">
-  </div>
-  <div class="gallery-img">
-    <img src="images/bild3.png" alt="Bild 3" loading="lazy">
-  </div>
-  <div class="gallery-img">
-    <img src="images/bild4.png" alt="Bild 4" loading="lazy">
-  </div>
-</div>
+      <div class="gallery-img">
+        <img src="images/bild1.png" alt="Bild 1" loading="lazy">
+      </div>
+      <div class="gallery-img">
+        <img src="images/bild2.png" alt="Bild 2" loading="lazy">
+      </div>
+      <div class="gallery-img">
+        <img src="images/bild3.png" alt="Bild 3" loading="lazy">
+      </div>
+      <div class="gallery-img">
+        <img src="images/bild4.png" alt="Bild 4" loading="lazy">
+      </div>
+    </div>
     <div style="text-align:center; padding: 2.5rem;">
       <a href="galerie.html" class="btn-outline">Zur Galerie</a>
     </div>
@@ -326,25 +347,22 @@
     </div>
     <div class="three-col">
       <div class="fade-in" style="text-align:center">
-        <div class="team-member-img img-placeholder" style="min-height:280px">
-          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-          <span>[Foto]</span>
+        <div class="team-member-img">
+          <img src="images/team1.jpg" alt="[Vorname Nachname]" loading="lazy">
         </div>
         <div class="team-member-name">[Vorname Nachname]</div>
         <div class="team-member-role" style="margin-top:0.3rem">[Berufsbezeichnung]</div>
       </div>
       <div class="fade-in" style="text-align:center; transition-delay:0.15s">
-        <div class="team-member-img img-placeholder" style="min-height:280px">
-          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-          <span>[Foto]</span>
+        <div class="team-member-img">
+          <img src="images/team2.jpg" alt="[Vorname Nachname]" loading="lazy">
         </div>
         <div class="team-member-name">[Vorname Nachname]</div>
         <div class="team-member-role" style="margin-top:0.3rem">[Berufsbezeichnung]</div>
       </div>
       <div class="fade-in" style="text-align:center; transition-delay:0.3s">
-        <div class="team-member-img img-placeholder" style="min-height:280px">
-          <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-          <span>[Foto]</span>
+        <div class="team-member-img">
+          <img src="images/team3.jpg" alt="[Vorname Nachname]" loading="lazy">
         </div>
         <div class="team-member-name">[Vorname Nachname]</div>
         <div class="team-member-role" style="margin-top:0.3rem">[Berufsbezeichnung]</div>
