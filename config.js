@@ -2,14 +2,14 @@
  * ============================================================
  *  SALON WEBSITE – ZENTRALE KONFIGURATION
  *  Automatisch generiert aus Webseite_Daten_komplett.xlsx
- *  Stand: 09.04.2026 14:10
+ *  Stand: 09.04.2026 14:28
  * ============================================================
  */
 
 const SALON_CONFIG = {
 
   // ── GRUNDDATEN ──────────────────────────────────────────
-  SALON_NAME:       "Max Hair Styling",
+  SALON_NAME:       "Lisa's Hair Styling",
   TAGLINE:          "Style your life",
   GRUENDUNGSJAHR:   "2023",
   STADT:            "München",
@@ -20,11 +20,11 @@ const SALON_CONFIG = {
   ADDRESS_ZIP:      "80331",
   ADDRESS_CITY:     "München",
   PHONE:            "01234 56789",
-  EMAIL:            "info@maxhair.de",
-  WHATSAPP:         "15737221530",
+  EMAIL:            "info@lisas_muc.de",
+  WHATSAPP:         "49894624835",
 
   // ── SOCIAL MEDIA ─────────────────────────────────────────
-  INSTAGRAM_HANDLE: "@maxhair",
+  INSTAGRAM_HANDLE: "@lisasmuc",
   INSTAGRAM_URL:    "",
   FACEBOOK_URL:     "",
 
@@ -72,7 +72,7 @@ const SALON_CONFIG = {
   // ── TEAM ─────────────────────────────────────────────────
   TEAM: [
     {
-        "name": "Niko Hair",
+        "name": "Lisa Hinrich",
         "role": "Meisterin / Inhaberin",
         "photo": "images/team1.jpg",
         "bio": "Testbio",
@@ -81,7 +81,7 @@ const SALON_CONFIG = {
         "isOwner": true
     },
     {
-        "name": "Alex Konstatnin",
+        "name": "Jessica Zuren",
         "role": "Stylistin",
         "photo": "images/team2.jpg",
         "bio": "",
@@ -91,7 +91,7 @@ const SALON_CONFIG = {
     },
     {
         "name": "Hasan Harom",
-        "role": "Coloristin",
+        "role": "Colorist",
         "photo": "images/team3.jpg",
         "bio": "",
         "quote": "",
@@ -213,21 +213,21 @@ const SALON_CONFIG = {
 
   // ── IMPRESSUM ────────────────────────────────────────────
   IMPRESSUM: {
-    INHABER_NAME:      "",
+    INHABER_NAME:      "Lisa Hinrich",
     BERUFSBEZEICHNUNG: "Friseurmeister/in",
-    KAMMER:            "",
-    UST_ID:            "",
-    REGISTERGERICHT:   "",
-    REGISTERNUMMER:    "",
-    STAND:             "",
+    KAMMER:            "Handwerkskammer München",
+    UST_ID:            "DE5982502234",
+    REGISTERGERICHT:   "Amtsgericht München",
+    REGISTERNUMMER:    "HRB Nummer",
+    STAND:             "46113",
   },
 
   // ── FOOTER ───────────────────────────────────────────────
   FOOTER_DESC: "",
 
   // ── TERMIN: STYLISTEN ────────────────────────────────────
-  BOOKING_STYLISTS: ["Niko Hair", "Alex Konstatnin", "Hasan Harom", "Imael Sibari"],
+  BOOKING_STYLISTS: ["Lisa Hinrich", "Jessica Zuren", "Hasan Harom", "Imael Sibari"],
 
   // ── BEWERBUNGS-E-MAIL ────────────────────────────────────
-  JOBS_EMAIL: "info@maxhair.de",
+  JOBS_EMAIL: "info@lisas_muc.de",
 };
