@@ -3,47 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Impressum – [Salonname]</title>
+  <title id="page-title">Impressum</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .legal-content {
-      max-width: 760px;
-      margin: 0 auto;
-    }
-    .legal-content h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      font-weight: 300;
-      color: var(--text);
-      margin: 2.5rem 0 0.8rem;
-    }
+    .legal-content { max-width: 760px; margin: 0 auto; }
+    .legal-content h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; color: var(--text); margin: 2.5rem 0 0.8rem; }
     .legal-content h2:first-child { margin-top: 0; }
-    .legal-content p, .legal-content address {
-      font-style: normal;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.9;
-      margin-bottom: 0.5rem;
-    }
+    .legal-content p, .legal-content address { font-style: normal; font-size: 0.88rem; color: var(--text-muted); line-height: 1.9; margin-bottom: 0.5rem; }
     .legal-content a { color: var(--gold); }
     hr { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 2rem 0; }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="nav-logo">[Salonname]</a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="leistungen.html">Leistungen & Preise</a></li>
-      <li><a href="team.html">Team</a></li>
-      <li><a href="galerie.html">Galerie</a></li>
-      <li><a href="kontakt.html">Kontakt</a></li>
-      <li><a href="termin.html" class="nav-cta">Termin buchen</a></li>
-    </ul>
-    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menü">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+
+  <div id="nav-placeholder"></div>
 
   <div class="page-content">
     <div class="page-hero" style="padding-bottom:3rem;">
@@ -51,96 +24,87 @@
     </div>
 
     <section>
-      <div class="legal-content">
-
-        <h2>Angaben gemäß § 5 TMG</h2>
-        <address>
-          [Vollständiger Name des Inhabers / der Inhaberin]<br>
-          [Salonname]<br>
-          [Straße und Hausnummer]<br>
-          [PLZ] [Stadt]<br>
-          Deutschland
-        </address>
-
-        <h2>Kontakt</h2>
-        <p>
-          Telefon: <a href="tel:[Telefonnummer]">[Telefonnummer]</a><br>
-          E-Mail: <a href="mailto:[E-Mail-Adresse]">[E-Mail-Adresse]</a>
-        </p>
-
-        <h2>Berufsbezeichnung und berufsrechtliche Regelungen</h2>
-        <p>
-          Berufsbezeichnung: [Friseur/Friseurmeister/in] (verliehen in Deutschland)<br>
-          Zuständige Kammer: [Handwerkskammer [Stadt/Region]]<br>
-          Berufsrechtliche Regelungen: Handwerksordnung (HwO)
-        </p>
-
-        <h2>Umsatzsteuer-ID</h2>
-        <p>
-          Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br>
-          [USt-IdNr. eintragen]
-        </p>
-
-        <h2>Handelsregistereintrag (falls zutreffend)</h2>
-        <p>
-          Registergericht: [Amtsgericht [Stadt]]<br>
-          Registernummer: [HRA/HRB Nummer]
-        </p>
-
-        <hr>
-
-        <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
-        <address>
-          [Vollständiger Name]<br>
-          [Straße und Hausnummer]<br>
-          [PLZ] [Stadt]
-        </address>
-
-        <hr>
-
-        <h2>Haftungsausschluss</h2>
-        <p>
-          <strong style="color:var(--text);">Haftung für Inhalte:</strong> Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
-        </p>
-        <p>
-          <strong style="color:var(--text);">Haftung für Links:</strong> Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.
-        </p>
-
-        <h2>Urheberrecht</h2>
-        <p>
-          Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-        </p>
-
-        <hr>
-        <p style="font-size:0.78rem;">Stand: [Monat Jahr]</p>
+      <div class="legal-content" id="impressum-content">
+        <!-- wird per JS aus config.js befüllt -->
       </div>
     </section>
   </div>
 
-  <footer>
-    <div class="footer-grid">
-      <div>
-        <span class="footer-logo">[Salonname]</span>
-      </div>
-      <div>
-        <div class="footer-title">Navigation</div>
-        <ul class="footer-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="kontakt.html">Kontakt</a></li>
-        </ul>
-      </div>
-      <div></div>
-      <div>
-        <div class="footer-title">Rechtliches</div>
-        <ul class="footer-links">
-          <li><a href="impressum.html">Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© [Jahr] [Salonname] · Alle Rechte vorbehalten</span>
-    </div>
-  </footer>
+  <div id="footer-placeholder"></div>
+
+  <script src="config.js"></script>
+  <script src="components.js"></script>
+  <script>
+    document.getElementById('page-title').textContent = `Impressum – ${SALON_CONFIG.SALON_NAME}`;
+    document.getElementById('nav-placeholder').innerHTML   = renderNav('impressum.html');
+    document.getElementById('footer-placeholder').innerHTML = renderFooter();
+
+    const imp = SALON_CONFIG.IMPRESSUM;
+    const C   = SALON_CONFIG;
+
+    document.getElementById('impressum-content').innerHTML = `
+      <h2>Angaben gemäß § 5 TMG</h2>
+      <address>
+        ${imp.INHABER_NAME}<br>
+        ${C.SALON_NAME}<br>
+        ${C.ADDRESS_STREET}<br>
+        ${C.ADDRESS_ZIP} ${C.ADDRESS_CITY}<br>
+        Deutschland
+      </address>
+
+      <h2>Kontakt</h2>
+      <p>
+        Telefon: <a href="tel:${C.PHONE}">${C.PHONE}</a><br>
+        E-Mail: <a href="mailto:${C.EMAIL}">${C.EMAIL}</a>
+      </p>
+
+      <h2>Berufsbezeichnung und berufsrechtliche Regelungen</h2>
+      <p>
+        Berufsbezeichnung: ${imp.BERUFSBEZEICHNUNG} (verliehen in Deutschland)<br>
+        Zuständige Kammer: ${imp.KAMMER}<br>
+        Berufsrechtliche Regelungen: Handwerksordnung (HwO)
+      </p>
+
+      <h2>Umsatzsteuer-ID</h2>
+      <p>
+        Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br>
+        ${imp.UST_ID}
+      </p>
+
+      ${imp.REGISTERGERICHT ? `
+      <h2>Handelsregistereintrag (falls zutreffend)</h2>
+      <p>
+        Registergericht: ${imp.REGISTERGERICHT}<br>
+        Registernummer: ${imp.REGISTERNUMMER}
+      </p>` : ''}
+
+      <hr>
+
+      <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+      <address>
+        ${imp.INHABER_NAME}<br>
+        ${C.ADDRESS_STREET}<br>
+        ${C.ADDRESS_ZIP} ${C.ADDRESS_CITY}
+      </address>
+
+      <hr>
+
+      <h2>Haftungsausschluss</h2>
+      <p>
+        <strong style="color:var(--text);">Haftung für Inhalte:</strong> Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
+      </p>
+      <p>
+        <strong style="color:var(--text);">Haftung für Links:</strong> Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.
+      </p>
+
+      <h2>Urheberrecht</h2>
+      <p>
+        Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+      </p>
+
+      <hr>
+      <p style="font-size:0.78rem;">Stand: ${imp.STAND}</p>
+    `;
+  </script>
 </body>
 </html>

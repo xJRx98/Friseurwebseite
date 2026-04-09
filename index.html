@@ -3,18 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[Salonname] – Friseursalon</title>
-  <meta name="description" content="[Salonname] – Ihr Friseursalon in [Stadt]. Haarschnitte, Colorationen, Styling und mehr.">
+  <title id="page-title">Friseursalon</title>
+  <meta name="description" id="page-description" content="">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── INDEX-SPECIFIC ── */
     .services-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 0;
       border: 1px solid rgba(201,169,110,0.15);
     }
-
     .service-item {
       padding: 2.5rem 2rem;
       border-right: 1px solid rgba(201,169,110,0.15);
@@ -24,197 +22,54 @@
       color: inherit;
       display: block;
     }
-
     .service-item:last-child { border-right: none; }
-
     .service-item:hover { background: rgba(201,169,110,0.05); }
+    .service-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+    .service-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--text); margin-bottom: 0.5rem; }
+    .service-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
 
-    .service-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
+    .gallery-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 4px; }
+    .gallery-img { aspect-ratio: 3/4; overflow: hidden; }
+    .gallery-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-img:first-child { grid-row: span 2; aspect-ratio: auto; }
 
-    .service-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      color: var(--text);
-      margin-bottom: 0.5rem;
-    }
-
-    .service-desc {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* Gallery strip */
-    .gallery-strip {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
-      margin-top: 4px;
-    }
-
-    .gallery-img {
-      aspect-ratio: 3/4;
-      overflow: hidden;
-    }
-
-    .gallery-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .gallery-img:first-child {
-      grid-row: span 2;
-      aspect-ratio: auto;
-    }
-
-    /* Reviews */
     .reviews-section { background: var(--black); }
-
     .stars { color: var(--gold); letter-spacing: 2px; font-size: 1rem; }
-
-    .review-card {
-      background: var(--mid);
-      border: 1px solid rgba(201,169,110,0.1);
-      padding: 2rem;
-    }
-
-    .review-text {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      font-style: italic;
-      margin-bottom: 1.2rem;
-      line-height: 1.8;
-    }
-
-    .reviewer-name {
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      color: var(--text);
-    }
-
+    .review-card { background: var(--mid); border: 1px solid rgba(201,169,110,0.1); padding: 2rem; }
+    .review-text { font-size: 0.9rem; color: var(--text-muted); font-style: italic; margin-bottom: 1.2rem; line-height: 1.8; }
+    .reviewer-name { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.05em; color: var(--text); }
     .reviewer-date { font-size: 0.75rem; color: var(--text-muted); }
-
-    .google-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      margin-bottom: 3rem;
-    }
-
-    .google-score {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 3.5rem;
-      color: var(--text);
-      line-height: 1;
-    }
-
+    .google-badge { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 3rem; }
+    .google-score { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: var(--text); line-height: 1; }
     .google-info { font-size: 0.8rem; color: var(--text-muted); }
 
-    /* Team teaser */
-    .team-member-img {
-      aspect-ratio: 3/4;
-      margin-bottom: 1.2rem;
-      overflow: hidden;
-    }
+    .team-member-img { aspect-ratio: 3/4; margin-bottom: 1.2rem; overflow: hidden; }
+    .team-member-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .team-member-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--text); }
+    .team-member-role { font-size: 0.78rem; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; }
 
-    .team-member-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .team-member-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      color: var(--text);
-    }
-
-    .team-member-role {
-      font-size: 0.78rem;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    /* Map section */
     .location-section { background: var(--black); }
-
-    .map-container {
-      width: 100%;
-      height: 380px;
-      border: 1px solid rgba(201,169,110,0.15);
-      overflow: hidden;
-      filter: grayscale(0.6) contrast(1.1);
-    }
-
+    .map-container { width: 100%; height: 380px; border: 1px solid rgba(201,169,110,0.15); overflow: hidden; filter: grayscale(0.6) contrast(1.1); }
     .map-container iframe { width: 100%; height: 100%; border: none; }
-
     .opening-hours table { width: 100%; border-collapse: collapse; }
-
     .opening-hours tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-    .opening-hours td {
-      padding: 0.8rem 0;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-    }
-
+    .opening-hours td { padding: 0.8rem 0; font-size: 0.88rem; color: var(--text-muted); }
     .opening-hours td:first-child { color: var(--text); }
-
     .opening-hours .today td { color: var(--gold); }
 
-    /* CTA banner */
-    .cta-banner {
-      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
-      padding: 5rem 5vw;
-      text-align: center;
-    }
-
+    .cta-banner { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); padding: 5rem 5vw; text-align: center; }
     .cta-banner .section-title { color: var(--dark); }
     .cta-banner p { color: rgba(26,24,21,0.75); margin-bottom: 2rem; }
-
-    .btn-dark {
-      display: inline-block;
-      background: var(--dark);
-      color: var(--gold);
-      padding: 1rem 2.5rem;
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: background 0.3s;
-    }
-
+    .btn-dark { display: inline-block; background: var(--dark); color: var(--gold); padding: 1rem 2.5rem; text-decoration: none; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: background 0.3s; }
     .btn-dark:hover { background: var(--black); }
-
-    /* About-Bild */
-    .about-img-wrap {
-      height: 460px;
-      overflow: hidden;
-    }
-
-    .about-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+    .about-img-wrap { height: 460px; overflow: hidden; }
+    .about-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     @media (max-width: 900px) {
       .services-grid { grid-template-columns: 1fr 1fr; }
       .gallery-strip { grid-template-columns: 1fr 1fr; }
       .gallery-img:first-child { grid-row: span 1; aspect-ratio: 3/4; }
     }
-
     @media (max-width: 640px) {
       .services-grid { grid-template-columns: 1fr; }
       .service-item { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.15); }
@@ -224,30 +79,15 @@
 </head>
 <body>
 
-  <!-- NAVIGATION -->
-  <nav>
-    <a href="index.html" class="nav-logo">[Salonname]</a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="leistungen.html">Leistungen & Preise</a></li>
-      <li><a href="team.html">Team</a></li>
-      <li><a href="galerie.html">Galerie</a></li>
-      <li><a href="kontakt.html">Kontakt</a></li>
-      <li><a href="termin.html" class="nav-cta">Termin buchen</a></li>
-    </ul>
-    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menü">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+  <div id="nav-placeholder"></div>
 
   <!-- HERO -->
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-pattern"></div>
     <div class="hero-glow"></div>
-
     <div class="hero-content">
-      <p class="hero-eyebrow">Friseursalon · [Stadt]</p>
+      <p class="hero-eyebrow">Friseursalon · <span class="cfg-stadt"></span></p>
       <h1 class="hero-title">Haare, die<br><em>für sich sprechen.</em></h1>
       <p class="hero-subtitle">Ihr Wohlfühlsalon für präzise Schnitte, ausdrucksstarke Colorationen und professionelle Styling-Beratung.</p>
       <div class="hero-actions">
@@ -255,7 +95,6 @@
         <a href="leistungen.html" class="btn-outline">Unsere Leistungen</a>
       </div>
     </div>
-
     <div class="hero-scroll">
       <div class="scroll-line"></div>
       <span>Entdecken</span>
@@ -298,7 +137,7 @@
         <h2 class="section-title">Leidenschaft trifft<br><em>Handwerk</em></h2>
         <div class="divider"></div>
         <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
-          Seit [Gründungsjahr] sind wir Ihr Vertrauenssalon in [Stadt]. Unser Team aus erfahrenen Stylistinnen und Stylisten verbindet klassisches Friseurhandwerk mit modernen Trends.
+          Seit <span class="cfg-gruendungsjahr"></span> sind wir Ihr Vertrauenssalon in <span class="cfg-stadt"></span>. Unser Team aus erfahrenen Stylistinnen und Stylisten verbindet klassisches Friseurhandwerk mit modernen Trends.
         </p>
         <p style="color: var(--text-muted); margin-bottom: 2rem;">
           Wir nehmen uns Zeit für Sie – von der persönlichen Beratung bis zum perfekten Finish. Denn bei uns geht es nicht nur um Haare, sondern darum, wie Sie sich fühlen.
@@ -314,25 +153,12 @@
   </section>
 
   <!-- GALLERY STRIP -->
-  <section style="padding: 0 0 0 0; background: var(--black);">
+  <section style="padding: 0; background: var(--black);">
     <div style="padding: 5rem 5vw 2rem;">
       <p class="section-label" style="text-align:center">Galerie</p>
       <h2 class="section-title" style="text-align:center">Unsere <em>Arbeit</em></h2>
     </div>
-    <div class="gallery-strip">
-      <div class="gallery-img">
-        <img src="images/bild1.png" alt="Bild 1" loading="lazy">
-      </div>
-      <div class="gallery-img">
-        <img src="images/bild2.png" alt="Bild 2" loading="lazy">
-      </div>
-      <div class="gallery-img">
-        <img src="images/bild3.png" alt="Bild 3" loading="lazy">
-      </div>
-      <div class="gallery-img">
-        <img src="images/bild4.png" alt="Bild 4" loading="lazy">
-      </div>
-    </div>
+    <div class="gallery-strip" id="gallery-strip"></div>
     <div style="text-align:center; padding: 2.5rem;">
       <a href="galerie.html" class="btn-outline">Zur Galerie</a>
     </div>
@@ -345,29 +171,7 @@
       <h2 class="section-title">Die <em>Menschen</em> hinter dem Schnitt</h2>
       <div class="divider center"></div>
     </div>
-    <div class="three-col">
-      <div class="fade-in" style="text-align:center">
-        <div class="team-member-img">
-          <img src="images/team1.jpg" alt="[Vorname Nachname]" loading="lazy">
-        </div>
-        <div class="team-member-name">[Vorname Nachname]</div>
-        <div class="team-member-role" style="margin-top:0.3rem">[Berufsbezeichnung]</div>
-      </div>
-      <div class="fade-in" style="text-align:center; transition-delay:0.15s">
-        <div class="team-member-img">
-          <img src="images/team2.jpg" alt="[Vorname Nachname]" loading="lazy">
-        </div>
-        <div class="team-member-name">[Vorname Nachname]</div>
-        <div class="team-member-role" style="margin-top:0.3rem">[Berufsbezeichnung]</div>
-      </div>
-      <div class="fade-in" style="text-align:center; transition-delay:0.3s">
-        <div class="team-member-img">
-          <img src="images/team3.jpg" alt="[Vorname Nachname]" loading="lazy">
-        </div>
-        <div class="team-member-name">[Vorname Nachname]</div>
-        <div class="team-member-role" style="margin-top:0.3rem">[Berufsbezeichnung]</div>
-      </div>
-    </div>
+    <div class="three-col" id="team-teaser"></div>
     <div style="text-align:center; margin-top:3rem;">
       <a href="team.html" class="btn-outline">Alle Teammitglieder</a>
     </div>
@@ -380,35 +184,17 @@
       <h2 class="section-title">Was unsere <em>Gäste</em> sagen</h2>
       <div class="divider center"></div>
       <div class="google-badge" style="justify-content:center">
-        <div class="google-score">[4.9]</div>
+        <div class="google-score cfg-google-rating"></div>
         <div>
           <div class="stars">★★★★★</div>
-          <div class="google-info">[Anzahl] Google-Bewertungen<br>
-            <a href="[Google-Bewertungslink]" target="_blank" style="color:var(--gold); text-decoration:none; font-size:0.78rem;">Alle Bewertungen auf Google →</a>
+          <div class="google-info">
+            <span class="cfg-review-count"></span> Google-Bewertungen<br>
+            <a id="reviews-link" href="#" target="_blank" style="color:var(--gold); text-decoration:none; font-size:0.78rem;">Alle Bewertungen auf Google →</a>
           </div>
         </div>
       </div>
     </div>
-    <div class="three-col">
-      <div class="review-card fade-in">
-        <div class="stars" style="margin-bottom:1rem">★★★★★</div>
-        <p class="review-text">„[Bewertungstext einfügen. Hier steht das Feedback eines zufriedenen Kunden über den Besuch im Salon.]"</p>
-        <div class="reviewer-name">[Kundenname]</div>
-        <div class="reviewer-date">[Datum]</div>
-      </div>
-      <div class="review-card fade-in" style="transition-delay:0.15s">
-        <div class="stars" style="margin-bottom:1rem">★★★★★</div>
-        <p class="review-text">„[Bewertungstext einfügen. Hier steht das Feedback eines weiteren zufriedenen Kunden.]"</p>
-        <div class="reviewer-name">[Kundenname]</div>
-        <div class="reviewer-date">[Datum]</div>
-      </div>
-      <div class="review-card fade-in" style="transition-delay:0.3s">
-        <div class="stars" style="margin-bottom:1rem">★★★★★</div>
-        <p class="review-text">„[Bewertungstext einfügen. Positives Kundenfeedback über Beratung, Schnitt oder Coloration.]"</p>
-        <div class="reviewer-name">[Kundenname]</div>
-        <div class="reviewer-date">[Datum]</div>
-      </div>
-    </div>
+    <div class="three-col" id="reviews-grid"></div>
   </section>
 
   <!-- LOCATION & HOURS -->
@@ -418,40 +204,20 @@
         <p class="section-label">Besuchen Sie uns</p>
         <h2 class="section-title">Standort &<br><em>Öffnungszeiten</em></h2>
         <div class="divider"></div>
-
         <div style="margin-bottom:2.5rem;">
-          <p style="color:var(--text); margin-bottom:0.3rem; font-weight:500;">[Straße und Hausnummer]</p>
-          <p style="color:var(--text-muted);">[PLZ] [Stadt]</p>
-          <p style="margin-top:0.8rem;"><a href="tel:[Telefonnummer]" style="color:var(--gold); text-decoration:none;">[Telefonnummer]</a></p>
-          <p><a href="mailto:[E-Mail]" style="color:var(--gold); text-decoration:none;">[E-Mail-Adresse]</a></p>
+          <p style="color:var(--text); margin-bottom:0.3rem; font-weight:500;" class="cfg-address-street"></p>
+          <p style="color:var(--text-muted);" class="cfg-address-zip-city"></p>
+          <p style="margin-top:0.8rem;"><a id="tel-link" href="#" style="color:var(--gold); text-decoration:none;" class="cfg-phone"></a></p>
+          <p><a id="email-link" href="#" style="color:var(--gold); text-decoration:none;" class="cfg-email"></a></p>
         </div>
-
         <div class="opening-hours">
-          <table>
-            <tr><td>Montag</td><td style="text-align:right">[9:00 – 18:00]</td></tr>
-            <tr><td>Dienstag</td><td style="text-align:right">[9:00 – 18:00]</td></tr>
-            <tr><td>Mittwoch</td><td style="text-align:right">[9:00 – 18:00]</td></tr>
-            <tr><td>Donnerstag</td><td style="text-align:right">[9:00 – 20:00]</td></tr>
-            <tr><td>Freitag</td><td style="text-align:right">[9:00 – 18:00]</td></tr>
-            <tr><td>Samstag</td><td style="text-align:right">[9:00 – 15:00]</td></tr>
-            <tr><td>Sonntag</td><td style="text-align:right">Geschlossen</td></tr>
-          </table>
+          <table id="hours-table"></table>
         </div>
       </div>
-
       <div class="fade-in" style="transition-delay:0.2s">
-        <div class="map-container">
-          <!-- Google Maps Embed: [Maps-Embed-Code hier einfügen] -->
-          <div class="img-placeholder" style="height:100%">
-            <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-              <circle cx="12" cy="9" r="2.5"/>
-            </svg>
-            <span>Google Maps Embed<br>hier einfügen</span>
-          </div>
-        </div>
+        <div class="map-container" id="map-container"></div>
         <div style="margin-top:1rem; text-align:right;">
-          <a href="https://maps.google.com/?q=[Adresse]" target="_blank" style="font-size:0.78rem; color:var(--gold); text-decoration:none; letter-spacing:0.05em;">In Google Maps öffnen →</a>
+          <a id="maps-link" href="#" target="_blank" style="font-size:0.78rem; color:var(--gold); text-decoration:none; letter-spacing:0.05em;">In Google Maps öffnen →</a>
         </div>
       </div>
     </div>
@@ -464,55 +230,84 @@
     <a href="termin.html" class="btn-dark">Termin buchen</a>
   </section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-grid">
-      <div>
-        <span class="footer-logo">[Salonname]</span>
-        <p class="footer-desc">[Kurze Beschreibung des Salons. Ein Satz, der den Charakter des Salons treffend beschreibt.]</p>
-        <div style="display:flex; gap:1rem; margin-top:1.5rem;">
-          <a href="[Instagram-Link]" style="color:var(--text-muted); text-decoration:none; font-size:0.78rem; transition:color 0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">Instagram</a>
-          <a href="[Facebook-Link]" style="color:var(--text-muted); text-decoration:none; font-size:0.78rem; transition:color 0.3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">Facebook</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-title">Navigation</div>
-        <ul class="footer-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="leistungen.html">Leistungen & Preise</a></li>
-          <li><a href="team.html">Team</a></li>
-          <li><a href="galerie.html">Galerie</a></li>
-          <li><a href="kontakt.html">Kontakt</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="footer-title">Kontakt</div>
-        <ul class="footer-links">
-          <li><a href="tel:[Telefonnummer]">[Telefonnummer]</a></li>
-          <li><a href="mailto:[E-Mail]">[E-Mail-Adresse]</a></li>
-          <li style="color:var(--text-muted); font-size:0.85rem; margin-top:0.4rem;">[Straße Hausnr.]<br>[PLZ] [Stadt]</li>
-        </ul>
-      </div>
-      <div>
-        <div class="footer-title">Rechtliches</div>
-        <ul class="footer-links">
-          <li><a href="impressum.html">Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© [Jahr] [Salonname] · Alle Rechte vorbehalten</span>
-      <span>Mit ♥ gestaltet in [Stadt]</span>
-    </div>
-  </footer>
+  <div id="footer-placeholder"></div>
 
+  <script src="config.js"></script>
+  <script src="components.js"></script>
   <script>
-    // Scroll animations
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    // ── Metadaten ──
+    document.getElementById('page-title').textContent = `${SALON_CONFIG.SALON_NAME} – Friseursalon`;
+    document.getElementById('page-description').content =
+      `${SALON_CONFIG.SALON_NAME} – Ihr Friseursalon in ${SALON_CONFIG.STADT}. Haarschnitte, Colorationen, Styling und mehr.`;
+
+    // ── Nav & Footer ──
+    document.getElementById('nav-placeholder').innerHTML  = renderNav('index.html');
+    document.getElementById('footer-placeholder').innerHTML = renderFooter();
+
+    // ── Einfache Textfelder ──
+    document.querySelectorAll('.cfg-stadt').forEach(el => el.textContent = SALON_CONFIG.STADT);
+    document.querySelectorAll('.cfg-gruendungsjahr').forEach(el => el.textContent = SALON_CONFIG.GRUENDUNGSJAHR);
+    document.querySelectorAll('.cfg-google-rating').forEach(el => el.textContent = SALON_CONFIG.GOOGLE_RATING);
+    document.querySelectorAll('.cfg-review-count').forEach(el => el.textContent = SALON_CONFIG.GOOGLE_REVIEW_COUNT);
+    document.querySelectorAll('.cfg-address-street').forEach(el => el.textContent = SALON_CONFIG.ADDRESS_STREET);
+    document.querySelectorAll('.cfg-address-zip-city').forEach(el => el.textContent = `${SALON_CONFIG.ADDRESS_ZIP} ${SALON_CONFIG.ADDRESS_CITY}`);
+    document.querySelectorAll('.cfg-phone').forEach(el => el.textContent = SALON_CONFIG.PHONE);
+    document.querySelectorAll('.cfg-email').forEach(el => el.textContent = SALON_CONFIG.EMAIL);
+    document.getElementById('tel-link').href   = `tel:${SALON_CONFIG.PHONE}`;
+    document.getElementById('email-link').href = `mailto:${SALON_CONFIG.EMAIL}`;
+    document.getElementById('reviews-link').href = SALON_CONFIG.GOOGLE_REVIEWS_URL;
+    document.getElementById('maps-link').href    = SALON_CONFIG.MAPS_LINK;
+
+    // ── Öffnungszeiten ──
+    document.getElementById('hours-table').innerHTML = renderHoursTable();
+
+    // ── Karte ──
+    document.getElementById('map-container').innerHTML = SALON_CONFIG.MAPS_EMBED_URL
+      ? `<iframe src="${SALON_CONFIG.MAPS_EMBED_URL}" allowfullscreen loading="lazy"></iframe>`
+      : `<div class="img-placeholder" style="height:100%">
+           <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+             <circle cx="12" cy="9" r="2.5"/>
+           </svg>
+           <span>Google Maps Embed einfügen</span>
+         </div>`;
+
+    // ── Galerie-Strip (erste 4 Bilder) ──
+    const stripEl = document.getElementById('gallery-strip');
+    SALON_CONFIG.GALLERY.slice(0, 4).forEach(img => {
+      const div = document.createElement('div');
+      div.className = 'gallery-img';
+      div.innerHTML = `<img src="${img.src}" alt="${img.alt}" loading="lazy">`;
+      stripEl.appendChild(div);
+    });
+
+    // ── Team-Teaser (erste 3 Mitglieder) ──
+    const teamEl = document.getElementById('team-teaser');
+    SALON_CONFIG.TEAM.slice(0, 3).forEach((m, i) => {
+      teamEl.innerHTML += `
+        <div class="fade-in" style="text-align:center; transition-delay:${i * 0.15}s">
+          <div class="team-member-img">
+            <img src="${m.photo}" alt="${m.name}" loading="lazy">
+          </div>
+          <div class="team-member-name">${m.name}</div>
+          <div class="team-member-role" style="margin-top:0.3rem">${m.role}</div>
+        </div>`;
+    });
+
+    // ── Bewertungen ──
+    const reviewsEl = document.getElementById('reviews-grid');
+    SALON_CONFIG.REVIEWS.forEach((r, i) => {
+      const stars = '★'.repeat(r.stars);
+      reviewsEl.innerHTML += `
+        <div class="review-card fade-in" style="transition-delay:${i * 0.15}s">
+          <div class="stars" style="margin-bottom:1rem">${stars}</div>
+          <p class="review-text">„${r.text}"</p>
+          <div class="reviewer-name">${r.name}</div>
+          <div class="reviewer-date">${r.date}</div>
+        </div>`;
+    });
+
+    initScrollAnimations();
   </script>
 </body>
 </html>

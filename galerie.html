@@ -3,125 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galerie – [Salonname]</title>
+  <title id="page-title">Galerie</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      padding: 0 5vw 2rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid rgba(201,169,110,0.25);
+      color: var(--text-muted);
+      padding: 0.5rem 1.4rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201,169,110,0.06);
+    }
+    .gallery-masonry {
+      columns: 3;
+      column-gap: 8px;
+      padding: 0 5vw 5rem;
+    }
+    .gallery-item {
+      break-inside: avoid;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .gallery-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.5s;
+    }
+    .gallery-item:hover img { transform: scale(1.04); }
+    .gallery-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 1.5rem;
+    }
+    .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+    .gallery-tag {
+      position: absolute;
+      bottom: 0.8rem;
+      left: 0.8rem;
+      background: rgba(17,16,16,0.75);
+      color: var(--gold);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.7rem;
+    }
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border: 1px solid rgba(201,169,110,0.2);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      color: var(--gold);
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    @media (max-width: 700px) { .gallery-masonry { columns: 2; } }
+    @media (max-width: 440px) { .gallery-masonry { columns: 1; } }
+  </style>
 </head>
-
 <body>
 
-<nav>
-  <a href="index.html" class="nav-logo">[Salonname]</a>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="leistungen.html">Leistungen & Preise</a></li>
-    <li><a href="team.html">Team</a></li>
-    <li><a href="galerie.html" class="active">Galerie</a></li>
-    <li><a href="kontakt.html">Kontakt</a></li>
-    <li><a href="termin.html" class="nav-cta">Termin buchen</a></li>
-  </ul>
-  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
-    ☰
-  </button>
-</nav>
+  <div id="nav-placeholder"></div>
 
-<div class="page-content">
+  <div class="page-content">
+    <div class="page-hero">
+      <p class="section-label">Unsere Arbeit</p>
+      <h1 class="section-title">Die <em>Galerie</em></h1>
+      <p class="hero-text" style="color:var(--text-muted); max-width:500px; margin:1rem auto 0; font-size:0.9rem;">
+        Inspiration und Einblicke aus unserem Salon – von klassischen Schnitten bis zu modernen Colorationen.
+      </p>
+    </div>
 
-  <div class="page-hero">
-    <p class="section-label">Unsere Arbeit</p>
-    <h1 class="section-title">Die <em>Galerie</em></h1>
-    <p class="hero-text">
-      Inspiration und Einblicke aus unserem Salon – von klassischen Schnitten bis zu modernen Colorationen.
-    </p>
+    <!-- FILTER -->
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-filter="all">Alle</button>
+      <!-- weitere Filter werden dynamisch aus den Kategorien der Bilder erzeugt -->
+    </div>
+
+    <!-- GALLERY -->
+    <div class="gallery-masonry" id="gallery-masonry"></div>
   </div>
 
-  <!-- FILTER -->
-  <div class="filter-bar">
-    <button class="filter-btn active" data-filter="all">Alle</button>
-    <button class="filter-btn" data-filter="schnitt">Schnitt</button>
-    <button class="filter-btn" data-filter="farbe">Farbe</button>
-    <button class="filter-btn" data-filter="braut">Braut</button>
-    <button class="filter-btn" data-filter="salon">Salon</button>
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img class="lightbox-img" id="lightbox-img" alt="">
   </div>
 
-  <!-- GALLERY -->
-  <div class="gallery-masonry">
+  <div id="footer-placeholder"></div>
 
-    <div class="gallery-item" data-category="farbe" onclick="openLightbox(this)">
-      <img src="images/balayage.png" alt="Balayage" loading="lazy">
-      <div class="gallery-item-overlay">🔍</div>
-      <span class="gallery-tag">Balayage</span>
-    </div>
+  <script src="config.js"></script>
+  <script src="components.js"></script>
+  <script>
+    document.getElementById('page-title').textContent = `Galerie – ${SALON_CONFIG.SALON_NAME}`;
+    document.getElementById('nav-placeholder').innerHTML  = renderNav('galerie.html');
+    document.getElementById('footer-placeholder').innerHTML = renderFooter();
 
-    <div class="gallery-item" data-category="schnitt" onclick="openLightbox(this)">
-      <img src="images/damenschnitt.png" alt="Damenschnitt" loading="lazy">
-      <div class="gallery-item-overlay">🔍</div>
-      <span class="gallery-tag">Damenschnitt</span>
-    </div>
-
-    <div class="gallery-item" data-category="braut" onclick="openLightbox(this)">
-      <img src="images/brautfrisur.png" alt="Brautfrisur" loading="lazy">
-      <div class="gallery-item-overlay">🔍</div>
-      <span class="gallery-tag">Braut</span>
-    </div>
-
-    <div class="gallery-item" data-category="farbe" onclick="openLightbox(this)">
-      <img src="images/highlights.png" alt="Highlights" loading="lazy">
-      <div class="gallery-item-overlay">🔍</div>
-      <span class="gallery-tag">Highlights</span>
-    </div>
-
-    <div class="gallery-item" data-category="salon" onclick="openLightbox(this)">
-      <img src="images/salon.png" alt="Salon" loading="lazy">
-      <div class="gallery-item-overlay">🔍</div>
-      <span class="gallery-tag">Salon</span>
-    </div>
-
-    <div class="gallery-item" data-category="schnitt" onclick="openLightbox(this)">
-      <img src="images/herrenschnitt.png" alt="Herrenschnitt" loading="lazy">
-      <div class="gallery-item-overlay">🔍</div>
-      <span class="gallery-tag">Herren</span>
-    </div>
-
-  </div>
-
-</div>
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <span class="lightbox-close">&times;</span>
-  <img class="lightbox-img" id="lightbox-img">
-</div>
-
-<script>
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const filter = btn.dataset.filter;
-
-    document.querySelectorAll('.gallery-item').forEach(item => {
-      item.style.display =
-        (filter === 'all' || item.dataset.category === filter)
-        ? 'block' : 'none';
+    // ── Filter-Buttons aus den Kategorien erzeugen ──
+    const categories = [...new Set(SALON_CONFIG.GALLERY.map(g => g.category))];
+    const filterBar  = document.getElementById('filter-bar');
+    const LABELS = { schnitt: 'Schnitt', farbe: 'Farbe', braut: 'Braut', salon: 'Salon', styling: 'Styling' };
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className    = 'filter-btn';
+      btn.dataset.filter = cat;
+      btn.textContent  = LABELS[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
+      filterBar.appendChild(btn);
     });
-  };
-});
 
-function openLightbox(el) {
-  const img = el.querySelector('img');
-  document.getElementById('lightbox-img').src = img.src;
-  document.getElementById('lightbox').style.display = 'flex';
-}
+    // ── Galerie-Items rendern ──
+    const masonry = document.getElementById('gallery-masonry');
+    SALON_CONFIG.GALLERY.forEach(img => {
+      masonry.innerHTML += `
+        <div class="gallery-item" data-category="${img.category}" onclick="openLightbox(this)">
+          <img src="${img.src}" alt="${img.alt}" loading="lazy">
+          <div class="gallery-item-overlay">🔍</div>
+          <span class="gallery-tag">${img.tag}</span>
+        </div>`;
+    });
 
-function closeLightbox() {
-  document.getElementById('lightbox').style.display = 'none';
-}
+    // ── Filter-Logik ──
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.gallery-item').forEach(item => {
+          item.style.display = (filter === 'all' || item.dataset.category === filter) ? 'block' : 'none';
+        });
+      };
+    });
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeLightbox();
-});
-</script>
-
+    function openLightbox(el) {
+      const img = el.querySelector('img');
+      document.getElementById('lightbox-img').src = img.src;
+      document.getElementById('lightbox-img').alt = img.alt;
+      document.getElementById('lightbox').style.display = 'flex';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
 </body>
 </html>

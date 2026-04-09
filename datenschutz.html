@@ -3,45 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Datenschutz – [Salonname]</title>
+  <title id="page-title">Datenschutz</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .legal-content { max-width: 760px; margin: 0 auto; }
-    .legal-content h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem; font-weight: 300;
-      color: var(--text); margin: 2.5rem 0 0.8rem;
-    }
-    .legal-content h3 {
-      font-size: 0.9rem; font-weight: 500;
-      color: var(--text); margin: 1.5rem 0 0.5rem;
-      letter-spacing: 0.03em;
-    }
+    .legal-content h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; color: var(--text); margin: 2.5rem 0 0.8rem; }
+    .legal-content h3 { font-size: 0.9rem; font-weight: 500; color: var(--text); margin: 1.5rem 0 0.5rem; letter-spacing: 0.03em; }
     .legal-content h2:first-child { margin-top: 0; }
-    .legal-content p, .legal-content li {
-      font-size: 0.88rem; color: var(--text-muted);
-      line-height: 1.9; margin-bottom: 0.5rem;
-    }
+    .legal-content p, .legal-content li { font-size: 0.88rem; color: var(--text-muted); line-height: 1.9; margin-bottom: 0.5rem; }
     .legal-content ul { padding-left: 1.5rem; margin-bottom: 1rem; }
     .legal-content a { color: var(--gold); }
     hr { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 2rem 0; }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="nav-logo">[Salonname]</a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="leistungen.html">Leistungen & Preise</a></li>
-      <li><a href="team.html">Team</a></li>
-      <li><a href="galerie.html">Galerie</a></li>
-      <li><a href="kontakt.html">Kontakt</a></li>
-      <li><a href="termin.html" class="nav-cta">Termin buchen</a></li>
-    </ul>
-    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menü">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+
+  <div id="nav-placeholder"></div>
 
   <div class="page-content">
     <div class="page-hero" style="padding-bottom:3rem;">
@@ -49,104 +26,94 @@
     </div>
 
     <section>
-      <div class="legal-content">
-
-        <h2>1. Datenschutz auf einen Blick</h2>
-        <h3>Allgemeine Hinweise</h3>
-        <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</p>
-
-        <h3>Datenerfassung auf unserer Website</h3>
-        <p><strong style="color:var(--text);">Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong><br>
-        Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Impressum dieser Website entnehmen.</p>
-
-        <p><strong style="color:var(--text);">Wie erfassen wir Ihre Daten?</strong><br>
-        Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen – z. B. durch das Kontaktformular oder eine Terminanfrage. Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst.</p>
-
-        <p><strong style="color:var(--text);">Wofür nutzen wir Ihre Daten?</strong><br>
-        Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens oder zur Bearbeitung Ihrer Anfragen verwendet werden.</p>
-
-        <hr>
-
-        <h2>2. Allgemeine Hinweise und Pflichtinformationen</h2>
-        <h3>Datenschutz</h3>
-        <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.</p>
-
-        <h3>Hinweis zur verantwortlichen Stelle</h3>
-        <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
-        <p>
-          [Vollständiger Name]<br>
-          [Salonname]<br>
-          [Straße und Hausnummer]<br>
-          [PLZ] [Stadt]<br>
-          Telefon: [Telefonnummer]<br>
-          E-Mail: <a href="mailto:[E-Mail-Adresse]">[E-Mail-Adresse]</a>
-        </p>
-
-        <h3>Widerruf Ihrer Einwilligung zur Datenverarbeitung</h3>
-        <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Dazu reicht eine formlose Mitteilung per E-Mail an uns.</p>
-
-        <h3>Beschwerderecht bei der zuständigen Aufsichtsbehörde</h3>
-        <p>Im Falle datenschutzrechtlicher Verstöße steht dem Betroffenen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu. Zuständige Aufsichtsbehörde in datenschutzrechtlichen Fragen ist der Landesdatenschutzbeauftragte des Bundeslandes, in dem unser Unternehmen seinen Sitz hat.</p>
-
-        <hr>
-
-        <h2>3. Datenerfassung auf unserer Website</h2>
-        <h3>Kontaktformular & Terminanfragen</h3>
-        <p>Wenn Sie uns per Kontaktformular oder Terminanfrage Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.</p>
-        <p>Die Verarbeitung der in das Kontaktformular eingegebenen Daten erfolgt somit ausschließlich auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Sie können diese Einwilligung jederzeit widerrufen.</p>
-
-        <h3>Server-Log-Dateien</h3>
-        <p>Der Provider der Seiten erhebt und speichert automatisch Informationen in sogenannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt. Dies sind: Browsertyp und -version, verwendetes Betriebssystem, Referrer-URL, Hostname des zugreifenden Rechners, Uhrzeit der Serveranfrage sowie IP-Adresse.</p>
-
-        <hr>
-
-        <h2>4. Google Maps</h2>
-        <p>Diese Seite nutzt über eine API den Kartendienst Google Maps. Anbieter ist die Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.</p>
-        <p>Zur Nutzung der Funktionen von Google Maps ist es notwendig, Ihre IP-Adresse zu speichern. Diese Informationen werden in der Regel an einen Server von Google in den USA übertragen und dort gespeichert. Der Anbieter dieser Seiten hat keinen Einfluss auf diese Datenübertragung.</p>
-        <p>Mehr Informationen zum Umgang mit Nutzerdaten finden Sie in der Datenschutzerklärung von Google: <a href="https://www.google.de/intl/de/policies/privacy/" target="_blank">https://www.google.de/intl/de/policies/privacy/</a></p>
-
-        <hr>
-
-        <h2>5. Ihre Rechte</h2>
-        <p>Sie haben jederzeit das Recht auf:</p>
-        <ul>
-          <li>Auskunft über Ihre bei uns gespeicherten Daten (Art. 15 DSGVO)</li>
-          <li>Berichtigung unrichtiger Daten (Art. 16 DSGVO)</li>
-          <li>Löschung Ihrer Daten (Art. 17 DSGVO)</li>
-          <li>Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
-          <li>Datenübertragbarkeit (Art. 20 DSGVO)</li>
-          <li>Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
-        </ul>
-        <p>Für Anfragen zu Ihren Rechten wenden Sie sich an: <a href="mailto:[E-Mail-Adresse]">[E-Mail-Adresse]</a></p>
-
-        <hr>
-        <p style="font-size:0.78rem;">Stand: [Monat Jahr] · <em>Diese Datenschutzerklärung sollte vor Veröffentlichung von einem Rechtsanwalt oder Datenschutzbeauftragten geprüft werden.</em></p>
+      <div class="legal-content" id="datenschutz-content">
+        <!-- wird per JS aus config.js befüllt -->
       </div>
     </section>
   </div>
 
-  <footer>
-    <div class="footer-grid">
-      <div><span class="footer-logo">[Salonname]</span></div>
-      <div>
-        <div class="footer-title">Navigation</div>
-        <ul class="footer-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="kontakt.html">Kontakt</a></li>
-        </ul>
-      </div>
-      <div></div>
-      <div>
-        <div class="footer-title">Rechtliches</div>
-        <ul class="footer-links">
-          <li><a href="impressum.html">Impressum</a></li>
-          <li><a href="datenschutz.html">Datenschutz</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© [Jahr] [Salonname] · Alle Rechte vorbehalten</span>
-    </div>
-  </footer>
+  <div id="footer-placeholder"></div>
+
+  <script src="config.js"></script>
+  <script src="components.js"></script>
+  <script>
+    document.getElementById('page-title').textContent = `Datenschutz – ${SALON_CONFIG.SALON_NAME}`;
+    document.getElementById('nav-placeholder').innerHTML   = renderNav('datenschutz.html');
+    document.getElementById('footer-placeholder').innerHTML = renderFooter();
+
+    const C   = SALON_CONFIG;
+    const imp = SALON_CONFIG.IMPRESSUM;
+
+    document.getElementById('datenschutz-content').innerHTML = `
+      <h2>1. Datenschutz auf einen Blick</h2>
+      <h3>Allgemeine Hinweise</h3>
+      <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</p>
+
+      <h3>Datenerfassung auf unserer Website</h3>
+      <p><strong style="color:var(--text);">Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong><br>
+      Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Impressum dieser Website entnehmen.</p>
+      <p><strong style="color:var(--text);">Wie erfassen wir Ihre Daten?</strong><br>
+      Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen – z. B. durch das Kontaktformular oder eine Terminanfrage. Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst.</p>
+      <p><strong style="color:var(--text);">Wofür nutzen wir Ihre Daten?</strong><br>
+      Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens oder zur Bearbeitung Ihrer Anfragen verwendet werden.</p>
+
+      <hr>
+
+      <h2>2. Allgemeine Hinweise und Pflichtinformationen</h2>
+      <h3>Datenschutz</h3>
+      <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.</p>
+
+      <h3>Hinweis zur verantwortlichen Stelle</h3>
+      <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
+      <p>
+        ${imp.INHABER_NAME}<br>
+        ${C.SALON_NAME}<br>
+        ${C.ADDRESS_STREET}<br>
+        ${C.ADDRESS_ZIP} ${C.ADDRESS_CITY}<br>
+        Telefon: ${C.PHONE}<br>
+        E-Mail: <a href="mailto:${C.EMAIL}">${C.EMAIL}</a>
+      </p>
+
+      <h3>Widerruf Ihrer Einwilligung zur Datenverarbeitung</h3>
+      <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Dazu reicht eine formlose Mitteilung per E-Mail an uns.</p>
+
+      <h3>Beschwerderecht bei der zuständigen Aufsichtsbehörde</h3>
+      <p>Im Falle datenschutzrechtlicher Verstöße steht dem Betroffenen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu. Zuständige Aufsichtsbehörde in datenschutzrechtlichen Fragen ist der Landesdatenschutzbeauftragte des Bundeslandes, in dem unser Unternehmen seinen Sitz hat.</p>
+
+      <hr>
+
+      <h2>3. Datenerfassung auf unserer Website</h2>
+      <h3>Kontaktformular & Terminanfragen</h3>
+      <p>Wenn Sie uns per Kontaktformular oder Terminanfrage Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.</p>
+      <p>Die Verarbeitung der in das Kontaktformular eingegebenen Daten erfolgt somit ausschließlich auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Sie können diese Einwilligung jederzeit widerrufen.</p>
+
+      <h3>Server-Log-Dateien</h3>
+      <p>Der Provider der Seiten erhebt und speichert automatisch Informationen in sogenannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt. Dies sind: Browsertyp und -version, verwendetes Betriebssystem, Referrer-URL, Hostname des zugreifenden Rechners, Uhrzeit der Serveranfrage sowie IP-Adresse.</p>
+
+      <hr>
+
+      <h2>4. Google Maps</h2>
+      <p>Diese Seite nutzt über eine API den Kartendienst Google Maps. Anbieter ist die Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.</p>
+      <p>Zur Nutzung der Funktionen von Google Maps ist es notwendig, Ihre IP-Adresse zu speichern. Diese Informationen werden in der Regel an einen Server von Google in den USA übertragen und dort gespeichert. Der Anbieter dieser Seiten hat keinen Einfluss auf diese Datenübertragung.</p>
+      <p>Mehr Informationen zum Umgang mit Nutzerdaten finden Sie in der Datenschutzerklärung von Google: <a href="https://www.google.de/intl/de/policies/privacy/" target="_blank">https://www.google.de/intl/de/policies/privacy/</a></p>
+
+      <hr>
+
+      <h2>5. Ihre Rechte</h2>
+      <p>Sie haben jederzeit das Recht auf:</p>
+      <ul>
+        <li>Auskunft über Ihre bei uns gespeicherten Daten (Art. 15 DSGVO)</li>
+        <li>Berichtigung unrichtiger Daten (Art. 16 DSGVO)</li>
+        <li>Löschung Ihrer Daten (Art. 17 DSGVO)</li>
+        <li>Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
+        <li>Datenübertragbarkeit (Art. 20 DSGVO)</li>
+        <li>Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
+      </ul>
+      <p>Für Anfragen zu Ihren Rechten wenden Sie sich an: <a href="mailto:${C.EMAIL}">${C.EMAIL}</a></p>
+
+      <hr>
+      <p style="font-size:0.78rem;">Stand: ${imp.STAND} · <em>Diese Datenschutzerklärung sollte vor Veröffentlichung von einem Rechtsanwalt oder Datenschutzbeauftragten geprüft werden.</em></p>
+    `;
+  </script>
 </body>
 </html>
