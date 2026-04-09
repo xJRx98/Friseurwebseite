@@ -72,7 +72,7 @@ function renderFooter() {
     </div>
     <div class="footer-bottom">
       <span>© ${SALON_CONFIG.YEAR} ${SALON_CONFIG.SALON_NAME} · Alle Rechte vorbehalten</span>
-      <span>Mit ♥ gestaltet in ${SALON_CONFIG.STADT}</span>
+      <span>Mit ♥ gestaltet von <a href="https://xjrx98software.de" target="_blank" rel="noopener noreferrer">xJRx98 Software</a></span>
     </div>
   </footer>`;
 }
