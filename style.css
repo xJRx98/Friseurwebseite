@@ -413,6 +413,16 @@ footer {
   font-size: 0.78rem;
 }
 
+.footer-bottom a {
+  color: inherit;      /* gleiche Farbe wie normaler Footer-Text */
+  font-weight: bold;   /* fett */
+  text-decoration: none;
+}
+
+.footer-bottom a:hover {
+  text-decoration: underline; /* optional beim Hover */
+}
+
 /* ── GOLD ACCENT LINE ── */
 .accent-line {
   width: 100%;
