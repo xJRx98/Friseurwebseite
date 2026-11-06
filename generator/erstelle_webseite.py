@@ -1,0 +1,246 @@
+"""Vorschau-Webseite + Angebots-PDF für einen Friseursalon aus einem Google-Maps-Link.
+
+  python3 generator/erstelle_webseite.py "<Google-Maps-Link>"
+
+- Daten über die offizielle Google Places API (New): Umgebungsvariable GOOGLE_MAPS_API_KEY. Ohne Schlüssel wird der
+  Name aus dem Link übernommen und der Rest mit Platzhaltern gefüllt.
+- Ergebnis: vorschau/<salon>/ (Kopie der Vorlage mit eigener config.js, für Suchmaschinen gesperrt) und
+  vorschau/<salon>/angebot.pdf (Pakete aus generator/angebot.json). Öffnet beides am Ende.
+Hinweis: Google-Fotos/-Bewertungen nur für die Vorschau (mit Quellenangabe); für die echte Seite liefert der Salon
+eigene Fotos und Texte. Impressum/Datenschutz müssen mit den Angaben des Inhabers vervollständigt werden."""
+import html, json, os, re, shutil, subprocess, sys, urllib.parse
+from datetime import date
+
+import requests
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+KEY = os.environ.get("GOOGLE_MAPS_API_KEY", "")
+DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+
+def resolve(link):
+    """Kurzlinks auflösen; Name und Koordinaten aus der Maps-URL lesen."""
+    url = link
+    if "goo.gl" in link or "g.co" in link:
+        url = requests.get(link, allow_redirects=True, timeout=20).url
+        q = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+        url = q.get("continue", [url])[0]
+    url = urllib.parse.unquote(url)
+    name = re.search(r"/place/([^/@]+)", url)
+    name = name.group(1).replace("+", " ") if name else ""
+    m = re.search(r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", url) or re.search(r"@(-?\d+\.\d+),(-?\d+\.\d+)", url)
+    return name, (float(m.group(1)), float(m.group(2))) if m else None
+
+
+def places(name, loc):
+    h = {"X-Goog-Api-Key": KEY, "X-Goog-FieldMask": "places.id"}
+    body = {"textQuery": name, "languageCode": "de"}
+    if loc:
+        body["locationBias"] = {"circle": {"center": {"latitude": loc[0], "longitude": loc[1]}, "radius": 300.0}}
+    r = requests.post("https://places.googleapis.com/v1/places:searchText", headers=h, json=body, timeout=20)
+    r.raise_for_status()
+    pid = r.json()["places"][0]["id"]
+    fields = ("id,displayName,formattedAddress,addressComponents,nationalPhoneNumber,internationalPhoneNumber,"
+              "regularOpeningHours,rating,userRatingCount,reviews,photos,googleMapsUri,websiteUri")
+    r = requests.get(f"https://places.googleapis.com/v1/places/{pid}", params={"languageCode": "de"},
+                     headers={"X-Goog-Api-Key": KEY, "X-Goog-FieldMask": fields}, timeout=20)
+    r.raise_for_status()
+    return r.json()
+
+
+def slugify(s):
+    s = s.lower().replace("ä", "ae").replace("ö", "oe").replace("ü", "ue").replace("ß", "ss")
+    return re.sub(r"[^a-z0-9]+", "-", s).strip("-")[:50] or "salon"
+
+
+def build_config(name, p, out):
+    comp = {t: c.get("longText", "") for c in p.get("addressComponents", []) for t in c.get("types", [])}
+    street = (comp.get("route", "") + " " + comp.get("street_number", "")).strip()
+    city = comp.get("locality", "")
+    hours = []
+    for line in p.get("regularOpeningHours", {}).get("weekdayDescriptions", []):
+        d, _, t = line.partition(": ")
+        hours.append({"day": d, "time": t.replace("Geschlossen", "Geschlossen")})
+    hours = hours or [{"day": d, "time": "bitte ergänzen"} for d in DAYS]
+    intl = re.sub(r"\D", "", p.get("internationalPhoneNumber", ""))
+    rating, count = str(p.get("rating", "")), str(p.get("userRatingCount", ""))
+    reviews = []
+    for rv in p.get("reviews", [])[:3]:
+        n = rv.get("authorAttribution", {}).get("displayName", "Gast").split()
+        reviews.append({"text": (rv.get("text") or {}).get("text", "")[:400],
+                        "name": n[0] + (f" {n[-1][0]}." if len(n) > 1 else ""),
+                        "date": rv.get("relativePublishTimeDescription", ""), "stars": int(rv.get("rating", 5))})
+    gallery = []
+    for i, ph in enumerate(p.get("photos", [])[:6]):
+        try:
+            img = requests.get(f"https://places.googleapis.com/v1/{ph['name']}/media",
+                               params={"maxWidthPx": 1600, "key": KEY}, timeout=30).content
+            fn = f"images/google_{i + 1}.jpg"
+            open(os.path.join(out, fn), "wb").write(img)
+            gallery.append({"src": fn, "alt": f"{name} (Foto: Google)", "category": "salon", "tag": "Salon"})
+        except Exception:
+            pass
+    maps_q = urllib.parse.quote(p.get("formattedAddress", name))
+    cfg = {
+        "SALON_NAME": name, "TAGLINE": "Ihr Friseur in " + (city or "Ihrer Nähe") + ".", "GRUENDUNGSJAHR": "vielen Jahren",
+        "STADT": city, "ADDRESS_STREET": street, "ADDRESS_ZIP": comp.get("postal_code", ""), "ADDRESS_CITY": city,
+        "PHONE": p.get("nationalPhoneNumber", ""), "EMAIL": "", "WHATSAPP": intl if intl.startswith("491") else "",
+        "INSTAGRAM_HANDLE": "", "INSTAGRAM_URL": "#", "FACEBOOK_URL": "#",
+        "MAPS_EMBED_URL": f"https://www.google.com/maps?q={maps_q}&output=embed",
+        "MAPS_LINK": p.get("googleMapsUri", f"https://maps.google.com/?q={maps_q}"),
+        "GOOGLE_REVIEWS_URL": p.get("googleMapsUri", ""), "GOOGLE_RATING": rating, "GOOGLE_REVIEW_COUNT": count,
+        "HOURS": hours,
+        "TEAM": [{"name": "Unser Team", "role": "Friseurinnen & Friseure", "photo": "images/team.png",
+                  "bio": f"Bei {name} nehmen wir uns Zeit für Ihre Beratung – vom klassischen Schnitt bis zur Farbe.",
+                  "quote": "Wir freuen uns auf Ihren Besuch.", "tags": ["Schnitt", "Farbe", "Styling"], "isOwner": True}],
+        "STATS": [{"number": rating or "–", "label": "Google-Bewertung"}, {"number": count or "–", "label": "Bewertungen"},
+                  {"number": str(sum(1 for h in hours if "Geschlossen" not in h["time"])), "label": "Tage geöffnet"},
+                  {"number": "1", "label": "Salon in " + (city or "der Stadt")}],
+        "REVIEWS": reviews or [{"text": "Hier erscheinen Ihre Google-Bewertungen.", "name": "", "date": "", "stars": 5}],
+        "IMPRESSUM": {"INHABER_NAME": "[Inhaber ergänzen]", "BERUFSBEZEICHNUNG": "[ergänzen]", "KAMMER": "[ergänzen]",
+                      "UST_ID": "[ergänzen]", "REGISTERGERICHT": "", "REGISTERNUMMER": "", "STAND": date.today().strftime("%m/%Y")},
+        "FOOTER_DESC": f"{name} – Ihr Friseursalon in {city}.", "BOOKING_STYLISTS": ["Unser Team"], "JOBS_EMAIL": "",
+        "GALLERY": gallery or None,          # None = Bilder der Vorlage
+        "SERVICES": None,                    # None = Leistungen der Vorlage (Beispielpreise)
+    }
+    return cfg
+
+
+def finalize(cfg, google, changed):
+    """Abgeleitete Felder nach dem Einlesen der Excel neu setzen (Karte, Texte mit Ort)."""
+    city = cfg.get("ADDRESS_CITY") or cfg.get("STADT", "")
+    cfg["STADT"] = cfg.get("STADT") or city
+    addr = ", ".join(x for x in (cfg.get("ADDRESS_STREET", ""), f"{cfg.get('ADDRESS_ZIP', '')} {city}".strip()) if x)
+    if addr and (not google or "ADDRESS_STREET" in changed):
+        q = urllib.parse.quote(f"{cfg['SALON_NAME']}, {addr}")
+        cfg["MAPS_EMBED_URL"] = f"https://www.google.com/maps?q={q}&output=embed"
+        cfg["MAPS_LINK"] = f"https://maps.google.com/?q={q}"
+    if "FOOTER_DESC" not in changed:
+        cfg["FOOTER_DESC"] = f"{cfg['SALON_NAME']} – Ihr Friseursalon in {city}." if city else f"{cfg['SALON_NAME']} – Ihr Friseursalon."
+    if "TAGLINE" not in changed and city:
+        cfg["TAGLINE"] = f"Ihr Friseur in {city}."
+    for st in cfg.get("STATS", []):
+        if st.get("label", "").startswith("Salon in"):
+            st["label"] = "Salon in " + (city or "der Stadt")
+
+
+def write_config(cfg, out):
+    tpl = open(os.path.join(ROOT, "config.js"), encoding="utf-8").read()
+    js = "/* Automatisch erzeugt (generator/erstelle_webseite.py) – VORSCHAU */\nconst SALON_CONFIG = {\n"
+    for k, v in cfg.items():
+        if k in ("GALLERY", "SERVICES") and v is None:
+            continue
+        js += f"  {k}: {json.dumps(v, ensure_ascii=False, indent=2)},\n"
+    js += "  YEAR: new Date().getFullYear(),\n"
+    if cfg.get("GALLERY") is None:
+        js += "  " + tpl[tpl.index("GALLERY:"):tpl.index("],", tpl.index("GALLERY:")) + 2] + "\n"
+    if cfg.get("SERVICES") is None:
+        js += tpl[tpl.index("  SERVICES:"):tpl.index("  // ── IMPRESSUM")]
+    js += "};\n"
+    open(os.path.join(out, "config.js"), "w", encoding="utf-8").write(js)
+
+
+def localize_fonts(out):
+    """Google-Schriften herunterladen und lokal einbinden (Datenschutz: keine Verbindung zu Google beim Besuch)."""
+    css_path = os.path.join(out, "style.css")
+    css = open(css_path, encoding="utf-8").read()
+    m = re.search(r"@import url\('(https://fonts\.googleapis\.com/[^']+)'\);", css)
+    if not m:
+        return False
+    ua = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/537.36 Chrome/120 Safari/537.36"}
+    try:
+        fcss = requests.get(m.group(1), headers=ua, timeout=20).text
+        os.makedirs(os.path.join(out, "fonts"), exist_ok=True)
+        for n, url in enumerate(sorted(set(re.findall(r"url\((https://fonts\.gstatic\.com/[^)]+)\)", fcss)))):
+            fn = f"font_{n + 1}.woff2"
+            open(os.path.join(out, "fonts", fn), "wb").write(requests.get(url, timeout=30).content)
+            fcss = fcss.replace(url, fn)
+        open(os.path.join(out, "fonts", "fonts.css"), "w", encoding="utf-8").write(fcss)
+        open(css_path, "w", encoding="utf-8").write(css.replace(m.group(0), "@import url('fonts/fonts.css');"))
+        return True
+    except requests.RequestException as e:
+        print("Schriften nicht lokal eingebunden (bleiben bei Google):", e)
+        return False
+
+
+def offer_pdf(cfg, out):
+    a = json.load(open(os.path.join(ROOT, "generator", "angebot.json"), encoding="utf-8"))
+    rows = "".join(
+        f"<div class='p'><h2>{html.escape(p['name'])}</h2><div class='price'>{html.escape(p['preis'])}</div>"
+        f"<ul>{''.join(f'<li>{html.escape(x)}</li>' for x in p['leistungen'])}</ul></div>" for p in a["pakete"])
+    addr = ", ".join(x for x in (cfg["ADDRESS_STREET"], f"{cfg['ADDRESS_ZIP']} {cfg['ADDRESS_CITY']}".strip()) if x)
+    extras = "".join(f"<tr><td>{html.escape(e[0])}</td><td>{html.escape(e[1])}</td></tr>" for e in a["extras"])
+    doc = f"""<!doctype html><html lang="de"><meta charset="utf-8"><style>
+body{{font-family:Helvetica,Arial,sans-serif;color:#222;margin:40px;font-size:11pt}} h1{{color:#9a7a4a;margin:0}}
+.sub{{color:#666;margin-bottom:24px}} .grid{{display:grid;grid-template-columns:1fr 1fr;gap:14px}}
+.p{{border:1px solid #ddd;border-radius:8px;padding:14px;page-break-inside:avoid}} .p h2{{margin:0;font-size:14pt}}
+.price{{font-size:15pt;font-weight:bold;color:#9a7a4a;margin:6px 0}} li{{margin:3px 0}} table{{width:100%;border-collapse:collapse}}
+td{{border-bottom:1px solid #eee;padding:5px}} .small{{color:#666;font-size:9pt;margin-top:20px}}</style>
+<p>{html.escape(a['anbieter'])}</p><h1>Angebot: Webseite für {html.escape(cfg['SALON_NAME'])}</h1>
+<div class="sub">{html.escape(addr + " · " if addr else "")}Datum {date.today():%d.%m.%Y} · gültig {a['gueltig_tage']} Tage</div>
+<p>Vielen Dank für Ihr Interesse. Eine Vorschau Ihrer neuen Webseite haben wir bereits erstellt (7 Seiten: Start, Leistungen
+& Preise, Team, Galerie, Termin, Kontakt, Impressum/Datenschutz). Wählen Sie das passende Paket:</p>
+<div class="grid">{rows}</div><h3>Zusatzleistungen</h3><table>{extras}</table>
+<p class="small">{html.escape(a['hinweis'])}</p></html>"""
+    h = os.path.join(out, "angebot.html")
+    open(h, "w", encoding="utf-8").write(doc)
+    pdf = os.path.join(out, "angebot.pdf")
+    subprocess.run([CHROME, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}",
+                    "file://" + h], capture_output=True, timeout=120)
+    return pdf
+
+
+def main():
+    import argparse
+    ap = argparse.ArgumentParser(description="Vorschau-Webseite + Angebot aus Google-Maps-Link und/oder Excel")
+    ap.add_argument("link", nargs="?", default="", help="Google-Maps-Link des Salons (optional mit --excel)")
+    ap.add_argument("--excel", help="ausgefüllte Salon-Daten (Vorlage: generator/excel_daten.py vorlage)")
+    ap.add_argument("--nicht-oeffnen", action="store_true", help="Vorschau und PDF nicht automatisch öffnen")
+    args = ap.parse_args()
+    link = args.link or ("" if args.excel else input("Google-Maps-Link: ").strip())
+    if not link and not args.excel:
+        sys.exit("Bitte einen Google-Maps-Link und/oder --excel angeben.")
+    excel_name = ""
+    if args.excel:
+        from openpyxl import load_workbook
+        ws = load_workbook(args.excel, data_only=True)["Grunddaten"]
+        excel_name = next((str(r[2]).strip() for r in ws.iter_rows(min_row=3, values_only=True)
+                           if r[0] == "SALON_NAME" and r[2]), "")
+    name, loc = resolve(link) if link else ("", None)
+    p = {}
+    if KEY and link:
+        p = places(name or link, loc)
+        name = p.get("displayName", {}).get("text", name)
+    else:
+        print("Hinweis: keine Google-Daten (Schlüssel oder Link fehlt) – Name aus Link/Excel, Rest aus Excel oder Platzhalter.")
+    name = excel_name or name or "Ihr Salon"
+    out = os.path.join(ROOT, "vorschau", slugify(name))
+    if os.path.exists(out):
+        shutil.rmtree(out)
+    shutil.copytree(ROOT, out, ignore=shutil.ignore_patterns(".git", "vorschau", "generator", "README.md"))
+    cfg = build_config(name, p, out)
+    if args.excel:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from excel_daten import apply_excel
+        changed = apply_excel(args.excel, cfg, out)
+        print(f"Aus Excel übernommen: {', '.join(changed) if changed else 'nichts (Datei leer?)'}")
+        finalize(cfg, google=bool(p), changed=changed)
+    write_config(cfg, out)
+    for f in os.listdir(out):                                   # Vorschau: nicht in Suchmaschinen
+        if f.endswith(".html"):
+            fp = os.path.join(out, f)
+            s = open(fp, encoding="utf-8").read()
+            open(fp, "w", encoding="utf-8").write(s.replace("<head>", '<head>\n  <meta name="robots" content="noindex,nofollow">', 1))
+    if localize_fonts(out):
+        print("Schriften lokal eingebunden (fonts/).")
+    pdf = offer_pdf(cfg, out)
+    print(f"Vorschau: {out}/index.html\nAngebot:  {pdf}")
+    if sys.platform == "darwin" and not args.nicht_oeffnen:
+        subprocess.run(["open", os.path.join(out, "index.html")])
+        if os.path.exists(pdf):
+            subprocess.run(["open", pdf])
+
+
+if __name__ == "__main__":
+    main()
