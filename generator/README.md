@@ -6,6 +6,27 @@ GOOGLE_MAPS_API_KEY=<Schlüssel> .venv/bin/python generator/erstelle_webseite.py
 ```
 Link und Excel sind jeweils optional (mindestens eins von beiden). `--nicht-oeffnen` unterdrückt das automatische Öffnen.
 
+## Designs (10 zur Auswahl)
+`--design <1–10 oder Name>` wählt ein Design (oder Feld „Design“ im Blatt Grunddaten der Excel), Standard 1.
+`--alle-designs` erzeugt zusätzlich alle 10 Varianten unter `vorschau/<salon>/designs/` (Bilder geteilt) sowie
+`designauswahl.html` und `designauswahl.pdf` mit Vorschaubildern (Startseite + Leistungen) zum Vorlegen beim Kunden.
+
+| Nr. | Design | Stil | Schriften |
+|---|---|---|---|
+| 1 | Gold Noir | dunkel, Gold (Original) | Cormorant Garamond / Jost |
+| 2 | Champagner Hell | Creme, dunkles Gold | Cormorant Garamond / Jost |
+| 3 | Rosé Blush | Rosé, feminin | Playfair Display / Lato |
+| 4 | Salbei Natur | Salbeigrün, natürlich | Lora / Nunito Sans |
+| 5 | Nordic Minimal | Schwarz-Weiß, reduziert | Manrope / Inter |
+| 6 | Midnight Blau | Nachtblau, heller Akzent | DM Serif Display / DM Sans |
+| 7 | Barber Industrial | Anthrazit, Kupfer (Barbershop) | Oswald / Barlow |
+| 8 | Smaragd Luxus | Smaragdgrün, Gold | Cinzel / Montserrat |
+| 9 | Terracotta Boho | Sand, Terrakotta | Fraunces / Work Sans |
+| 10 | Lavendel Modern | Lavendel, kreativ | Josefin Sans / Karla |
+
+Neue Designs: Eintrag in `generator/designs.py` ergänzen (Akzentfarbe muss stark zum Hintergrund kontrastieren,
+weil Text auf Schaltflächen die Hintergrundfarbe nutzt).
+
 ## Salon-Daten per Excel
 - Leere Vorlage: `generator/salon_daten_vorlage.xlsx` (neu erzeugen mit `.venv/bin/python generator/excel_daten.py vorlage`).
 - Pro Salon eine Kopie ausfüllen; Fotos in denselben Ordner legen und den Dateinamen eintragen.

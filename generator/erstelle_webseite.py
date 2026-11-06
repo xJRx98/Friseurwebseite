@@ -13,6 +13,9 @@ from datetime import date
 
 import requests
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import designs  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEY = os.environ.get("GOOGLE_MAPS_API_KEY", "")
 DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
@@ -125,6 +128,71 @@ def finalize(cfg, google, changed):
             st["label"] = "Salon in " + (city or "der Stadt")
 
 
+def prepare_pages(target, cfg, design):
+    """config.js schreiben, Vorschau sperren (noindex), Design anwenden, Schriften lokal einbinden."""
+    write_config(cfg, target)
+    for f in os.listdir(target):
+        if f.endswith(".html"):
+            fp = os.path.join(target, f)
+            s = open(fp, encoding="utf-8").read()
+            if 'name="robots"' not in s:
+                s = s.replace("<head>", '<head>\n  <meta name="robots" content="noindex,nofollow">', 1)
+            open(fp, "w", encoding="utf-8").write(s)
+    designs.apply(target, design)
+    localize_fonts(target)
+
+
+def shot(html_file, png, size="1280,1700"):
+    subprocess.run([CHROME, "--headless", "--disable-gpu", "--hide-scrollbars", f"--window-size={size}",
+                    "--virtual-time-budget=4000", f"--screenshot={png}", "file://" + html_file],
+                   capture_output=True, timeout=120)
+
+
+def all_designs(out, cfg):
+    """Alle Designs als eigene Seiten unter out/designs/NN-name/ (Bilder geteilt), dazu Übersicht + PDF."""
+    base = os.path.join(out, "designs")
+    if os.path.exists(base):
+        shutil.rmtree(base)
+    os.makedirs(base)
+    cards = []
+    for i, d in enumerate(designs.DESIGNS, 1):
+        v = os.path.join(base, f"{i:02d}-{d['key']}")
+        os.makedirs(v)
+        for f in os.listdir(ROOT):
+            if f.endswith((".html", ".css", ".js")):
+                shutil.copy(os.path.join(ROOT, f), v)
+        os.symlink(os.path.relpath(os.path.join(out, "images"), v), os.path.join(v, "images"))
+        prepare_pages(v, cfg, d)
+        png = os.path.join(base, f"{i:02d}-{d['key']}.png")
+        png2 = os.path.join(base, f"{i:02d}-{d['key']}-leistungen.png")
+        shot(os.path.join(v, "index.html"), png, "1280,820")
+        shot(os.path.join(v, "leistungen.html") + "#schnitt", png2, "1280,1400")
+        cards.append((i, d, os.path.relpath(png, out), os.path.relpath(png2, out),
+                      os.path.relpath(os.path.join(v, "index.html"), out)))
+        print(f"  Design {i:2d} {d['name']} fertig", flush=True)
+    items = "".join(
+        f"<div class='c'><a href='{link}'><img src='{img}'><img class='l' src='{img2}'></a><h2>{i}. {html.escape(d['name'])}</h2>"
+        f"<p>{html.escape(d['text_de'])}</p><p class='f'>Schriften: {html.escape(d['head'])} / {html.escape(d['body'])}</p>"
+        f"<div class='sw'>{''.join(f'<span style=background:{c}></span>' for c in (d['dark'], d['mid'], d['accent'], d['text']))}</div></div>"
+        for i, d, img, img2, link in cards)
+    doc = f"""<!doctype html><html lang="de"><meta charset="utf-8"><title>Designauswahl {html.escape(cfg['SALON_NAME'])}</title>
+<style>body{{font-family:Helvetica,Arial,sans-serif;margin:32px;color:#222}} h1{{margin:0 0 4px}} .sub{{color:#666;margin-bottom:20px}}
+.g{{display:grid;grid-template-columns:1fr 1fr;gap:22px}} .c{{border:1px solid #ddd;border-radius:8px;padding:12px;page-break-inside:avoid}}
+.c img{{width:100%;aspect-ratio:1280/820;object-fit:cover;object-position:top;border-radius:4px;border:1px solid #eee}}
+.c img.l{{aspect-ratio:1280/560;object-position:0 62%;margin-top:6px}}
+.c h2{{font-size:14pt;margin:8px 0 2px}} .c p{{margin:2px 0;font-size:10pt}} .f{{color:#777}}
+.sw span{{display:inline-block;width:26px;height:16px;margin:6px 4px 0 0;border:1px solid #ccc;border-radius:3px}}</style>
+<h1>Designauswahl für {html.escape(cfg['SALON_NAME'])}</h1>
+<div class="sub">10 Designs mit Ihren Inhalten – Bild anklicken für die Vorschau. Bitte nennen Sie uns die Nummer Ihres Favoriten.</div>
+<div class="g">{items}</div></html>"""
+    sel = os.path.join(out, "designauswahl.html")
+    open(sel, "w", encoding="utf-8").write(doc)
+    pdf = os.path.join(out, "designauswahl.pdf")
+    subprocess.run([CHROME, "--headless", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}",
+                    "--virtual-time-budget=3000", "file://" + sel], capture_output=True, timeout=120)
+    return sel, pdf
+
+
 def write_config(cfg, out):
     tpl = open(os.path.join(ROOT, "config.js"), encoding="utf-8").read()
     js = "/* Automatisch erzeugt (generator/erstelle_webseite.py) – VORSCHAU */\nconst SALON_CONFIG = {\n"
@@ -197,6 +265,8 @@ def main():
     ap.add_argument("link", nargs="?", default="", help="Google-Maps-Link des Salons (optional mit --excel)")
     ap.add_argument("--excel", help="ausgefüllte Salon-Daten (Vorlage: generator/excel_daten.py vorlage)")
     ap.add_argument("--nicht-oeffnen", action="store_true", help="Vorschau und PDF nicht automatisch öffnen")
+    ap.add_argument("--design", help="Design-Nummer 1–10 oder Name (Standard: aus Excel, sonst 1 Gold Noir)")
+    ap.add_argument("--alle-designs", action="store_true", help="alle 10 Designs + Übersicht/PDF zur Kundenauswahl")
     args = ap.parse_args()
     link = args.link or ("" if args.excel else input("Google-Maps-Link: ").strip())
     if not link and not args.excel:
@@ -226,20 +296,21 @@ def main():
         changed = apply_excel(args.excel, cfg, out)
         print(f"Aus Excel übernommen: {', '.join(changed) if changed else 'nichts (Datei leer?)'}")
         finalize(cfg, google=bool(p), changed=changed)
-    write_config(cfg, out)
-    for f in os.listdir(out):                                   # Vorschau: nicht in Suchmaschinen
-        if f.endswith(".html"):
-            fp = os.path.join(out, f)
-            s = open(fp, encoding="utf-8").read()
-            open(fp, "w", encoding="utf-8").write(s.replace("<head>", '<head>\n  <meta name="robots" content="noindex,nofollow">', 1))
-    if localize_fonts(out):
-        print("Schriften lokal eingebunden (fonts/).")
+    design = designs.get(args.design or cfg.pop("DESIGN", "") or "")
+    cfg.pop("DESIGN", None)
+    prepare_pages(out, cfg, design)
+    print(f"Design: {design['name']}")
     pdf = offer_pdf(cfg, out)
     print(f"Vorschau: {out}/index.html\nAngebot:  {pdf}")
+    to_open = [os.path.join(out, "index.html"), pdf]
+    if args.alle_designs:
+        sel_html, sel_pdf = all_designs(out, cfg)
+        print(f"Designauswahl: {sel_html}\nDesignauswahl-PDF: {sel_pdf}")
+        to_open = [sel_html, sel_pdf, pdf]
     if sys.platform == "darwin" and not args.nicht_oeffnen:
-        subprocess.run(["open", os.path.join(out, "index.html")])
-        if os.path.exists(pdf):
-            subprocess.run(["open", pdf])
+        for f in to_open:
+            if os.path.exists(f):
+                subprocess.run(["open", f])
 
 
 if __name__ == "__main__":

@@ -16,6 +16,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.worksheet.datavalidation import DataValidation
 
 GRUNDDATEN = [  # (Schlüssel, Bezeichnung, Hinweis)
+    ("DESIGN", "Design (Nummer 1–10)", "1 Gold Noir, 2 Champagner Hell, 3 Rosé Blush, 4 Salbei Natur, 5 Nordic Minimal, "
+                                          "6 Midnight Blau, 7 Barber Industrial, 8 Smaragd Luxus, 9 Terracotta Boho, 10 Lavendel Modern"),
     ("SALON_NAME", "Name des Salons", "leer = Name aus Google"),
     ("TAGLINE", "Slogan", "z. B. „Schönheit beginnt mit dem richtigen Schnitt.“"),
     ("GRUENDUNGSJAHR", "Gründungsjahr", "z. B. 2014 – erscheint als „Seit 2014 …“"),
