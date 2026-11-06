@@ -288,24 +288,18 @@ td{{border-bottom:1px solid #eee;padding:5px}} .small{{color:#666;font-size:9pt;
     return pdf
 
 
-def main():
-    import argparse
-    ap = argparse.ArgumentParser(description="Vorschau-Webseite + Angebot aus Google-Maps-Link und/oder Excel")
-    ap.add_argument("link", nargs="?", default="", help="Google-Maps-Link des Salons (optional mit --excel)")
-    ap.add_argument("--excel", help="ausgefüllte Salon-Daten (Vorlage: generator/excel_daten.py vorlage)")
-    ap.add_argument("--nicht-oeffnen", action="store_true", help="Vorschau und PDF nicht automatisch öffnen")
-    ap.add_argument("--design", help="Design 1–10 oder Name (Standard: aus Excel, sonst 1 Klassik Elegant)")
-    ap.add_argument("--farbe", help="Farbkonzept 1–10 oder Name (Standard: aus Excel, sonst 1 Gold Noir)")
-    ap.add_argument("--alle-designs", action="store_true",
-                    help="Kundenauswahl: 10 Designs + 10 Farbkonzepte als Übersicht/PDF")
-    args = ap.parse_args()
-    link = args.link or ("" if args.excel else input("Google-Maps-Link: ").strip())
-    if not link and not args.excel:
-        sys.exit("Bitte einen Google-Maps-Link und/oder --excel angeben.")
+def erstelle(link="", excel=None, design=None, farbe=None, alle=False, api_key=None, log=print):
+    """Webseite (+ optional Kundenauswahl) erzeugen. farbe: Nummer/Name oder ein eigenes Farbkonzept (dict).
+    Gibt ein dict mit den Pfaden zurück (out, index, angebot, auswahl, auswahl_pdf, name, design, farbe)."""
+    global KEY
+    if api_key is not None:
+        KEY = api_key
+    if not link and not excel:
+        raise ValueError("Bitte einen Google-Maps-Link und/oder eine Excel-Datei angeben.")
     excel_name = ""
-    if args.excel:
+    if excel:
         from openpyxl import load_workbook
-        ws = load_workbook(args.excel, data_only=True)["Grunddaten"]
+        ws = load_workbook(excel, data_only=True)["Grunddaten"]
         excel_name = next((str(r[2]).strip() for r in ws.iter_rows(min_row=3, values_only=True)
                            if r[0] == "SALON_NAME" and r[2]), "")
     name, loc = resolve(link) if link else ("", None)
@@ -313,32 +307,55 @@ def main():
     if KEY and link:
         p = places(name or link, loc)
         name = p.get("displayName", {}).get("text", name)
+        log(f"Google-Daten geladen: {name}")
     else:
-        print("Hinweis: keine Google-Daten (Schlüssel oder Link fehlt) – Name aus Link/Excel, Rest aus Excel oder Platzhalter.")
+        log("Hinweis: keine Google-Daten (Schlüssel oder Link fehlt) – Name aus Link/Excel, Rest aus Excel oder Platzhalter.")
     name = excel_name or name or "Ihr Salon"
     out = os.path.join(ROOT, "vorschau", slugify(name))
     if os.path.exists(out):
         shutil.rmtree(out)
-    shutil.copytree(ROOT, out, ignore=shutil.ignore_patterns(".git", "vorschau", "generator", "README.md"))
+    shutil.copytree(ROOT, out, ignore=shutil.ignore_patterns(".git", "vorschau", "generator", "README.md", ".venv",
+                                                            "*.command", ".gitignore"))
     cfg = build_config(name, p, out)
-    if args.excel:
-        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    if excel:
         from excel_daten import apply_excel
-        changed = apply_excel(args.excel, cfg, out)
-        print(f"Aus Excel übernommen: {', '.join(changed) if changed else 'nichts (Datei leer?)'}")
+        changed = apply_excel(excel, cfg, out)
+        log(f"Aus Excel übernommen: {', '.join(changed) if changed else 'nichts (Datei leer?)'}")
         finalize(cfg, google=bool(p), changed=changed)
-    design = designs.get_design(args.design or cfg.get("DESIGN", ""))
-    farbe = designs.get_farbe(args.farbe or cfg.get("FARBE", ""))
+    design = designs.get_design(design or cfg.get("DESIGN", ""))
+    farbe = farbe if isinstance(farbe, dict) else designs.get_farbe(farbe or cfg.get("FARBE", ""))
     cfg.pop("DESIGN", None); cfg.pop("FARBE", None)
     prepare_pages(out, cfg, design, farbe)
-    print(f"Design: {design['name']}, Farbkonzept: {farbe['name']}")
+    log(f"Design: {design['name']}, Farbkonzept: {farbe['name']}")
     pdf = offer_pdf(cfg, out)
-    print(f"Vorschau: {out}/index.html\nAngebot:  {pdf}")
-    to_open = [os.path.join(out, "index.html"), pdf]
+    res = dict(out=out, index=os.path.join(out, "index.html"), angebot=pdf, name=name,
+               design=design["name"], farbe=farbe["name"])
+    if alle:
+        res["auswahl"], res["auswahl_pdf"] = all_designs(out, cfg, design, farbe)
+    return res
+
+
+def main():
+    import argparse
+    ap = argparse.ArgumentParser(description="Vorschau-Webseite + Angebot aus Google-Maps-Link und/oder Excel")
+    ap.add_argument("link", nargs="?", default="", help="Google-Maps-Link des Salons (optional mit --excel)")
+    ap.add_argument("--excel", help="ausgefüllte Salon-Daten (Vorlage: generator/excel_daten.py vorlage)")
+    ap.add_argument("--nicht-oeffnen", action="store_true", help="Vorschau und PDF nicht automatisch öffnen")
+    ap.add_argument("--design", help="Design 1–10 oder Name (Standard: aus Excel, sonst 1 Klassik Elegant)")
+    ap.add_argument("--farbe", help="Farbkonzept 1–10, Name oder eigenes (aus eigene_farben.json)")
+    ap.add_argument("--alle-designs", action="store_true",
+                    help="Kundenauswahl: 10 Designs + 10 Farbkonzepte als Übersicht/PDF")
+    args = ap.parse_args()
+    link = args.link or ("" if args.excel else input("Google-Maps-Link: ").strip())
+    try:
+        res = erstelle(link, args.excel, args.design, args.farbe, args.alle_designs)
+    except ValueError as e:
+        sys.exit(str(e))
+    print(f"Vorschau: {res['index']}\nAngebot:  {res['angebot']}")
+    to_open = [res["index"], res["angebot"]]
     if args.alle_designs:
-        sel_html, sel_pdf = all_designs(out, cfg, design, farbe)
-        print(f"Designauswahl: {sel_html}\nDesignauswahl-PDF: {sel_pdf}")
-        to_open = [sel_html, sel_pdf, pdf]
+        print(f"Designauswahl: {res['auswahl']}\nDesignauswahl-PDF: {res['auswahl_pdf']}")
+        to_open = [res["auswahl"], res["auswahl_pdf"], res["angebot"]]
     if sys.platform == "darwin" and not args.nicht_oeffnen:
         for f in to_open:
             if os.path.exists(f):

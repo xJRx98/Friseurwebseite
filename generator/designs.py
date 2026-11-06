@@ -274,8 +274,58 @@ def get_design(v):
     return _pick(DESIGNS, v, "Design")
 
 
+EIGENE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "eigene_farben.json")
+
+
+def eigene_farben():
+    import json
+    try:
+        return json.load(open(EIGENE, encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+
+
+def speichere_eigene(f):
+    import json
+    alle = [x for x in eigene_farben() if x["key"] != f["key"]] + [f]
+    json.dump(alle, open(EIGENE, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
+
+
 def get_farbe(v):
+    k = str(v or "").strip().lower()
+    for f in eigene_farben():
+        if k in (f["key"], f["name"].lower()):
+            return f
     return _pick(FARBEN, v, "Farbkonzept")
+
+
+def _lum(hex_):
+    r, g, b = (int(hex_.lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    lin = lambda c: c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+
+
+def kontrast(a, b):
+    la, lb = sorted((_lum(a), _lum(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def _mix(a, b, t):
+    ca = [int(a.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)]
+    cb = [int(b.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)]
+    return "#" + "".join(f"{round(x + (y - x) * t):02x}" for x, y in zip(ca, cb))
+
+
+def eigene_farbe(name, hintergrund, text, akzent, abschnitt=None, flaeche=None, gedaempft=None):
+    """Eigenes Farbkonzept aus 3 Grundfarben; Abstufungen werden abgeleitet, wenn nicht angegeben."""
+    light = _lum(hintergrund) > 0.4
+    key = "eigen-" + re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    black = abschnitt or _mix(hintergrund, "#000000", 0.05 if light else 0.30)          # Abschnitte: etwas dunkler
+    mid = flaeche or (_mix(hintergrund, "#000000", 0.08) if light else _mix(hintergrund, "#ffffff", 0.10))  # Karten
+    return dict(key=key, name=name, text_de="Eigenes Farbkonzept.", mode="light" if light else "dark",
+                dark=hintergrund, black=black, mid=mid, text=text,
+                muted=gedaempft or _mix(text, hintergrund, 0.42), accent=akzent,
+                accent_light=_mix(akzent, "#ffffff", 0.35), accent_dark=_mix(akzent, "#000000", 0.25))
 
 
 def _rgb(hex_):

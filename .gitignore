@@ -1,3 +1,4 @@
 vorschau/
 .venv/
 __pycache__/
+generator/einstellungen.json

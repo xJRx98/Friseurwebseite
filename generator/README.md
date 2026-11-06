@@ -1,5 +1,19 @@
 # Vorschau-Webseite + Angebot aus einem Google-Maps-Link
 
+## Bedienoberfläche (empfohlen)
+Doppelklick auf **`Webseiten-Generator.command`** im Hauptordner (beim ersten Mal ggf. Rechtsklick → Öffnen, weil
+macOS Skripte aus dem Internet blockiert). Die Oberfläche öffnet sich im Browser (`http://127.0.0.1:8765`, nur auf
+diesem Rechner erreichbar):
+1. Google-Maps-Link einfügen, optional Excel + Fotos auswählen
+2. Design (1–10) und Farbkonzept (1–10) anklicken – oder **„＋ Eigenes Farbkonzept“**: Hintergrund, Text und Akzent
+   wählen, Abstufungen werden abgeleitet (Feinabstimmung möglich), Kontrast-Warnung, Live-Vorschau; gespeicherte
+   Farbkonzepte landen in `generator/eigene_farben.json` und stehen dann in der Liste
+3. „Vorschau erstellen“ (ca. 2 s) oder „Kundenauswahl“ (alle Designs + Farben, ca. 1–2 Min.) – Ergebnis rechts,
+   Links zu Webseite, Angebot und Auswahl-PDF
+Der Google-API-Schlüssel kann unter „Einstellungen“ gespeichert werden (`generator/einstellungen.json`, nicht im Git).
+
+## Kommandozeile
+
 ```
 cd ~/Programmieren/Friseurwebseite
 GOOGLE_MAPS_API_KEY=<Schlüssel> .venv/bin/python generator/erstelle_webseite.py "<Google-Maps-Link>" --excel <salon.xlsx>
