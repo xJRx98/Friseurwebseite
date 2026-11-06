@@ -89,7 +89,7 @@ def build_config(name, p, out):
         "SALON_NAME": name, "TAGLINE": "Ihr Friseur in " + (city or "Ihrer Nähe") + ".", "GRUENDUNGSJAHR": "vielen Jahren",
         "STADT": city, "ADDRESS_STREET": street, "ADDRESS_ZIP": comp.get("postal_code", ""), "ADDRESS_CITY": city,
         "PHONE": p.get("nationalPhoneNumber", ""), "EMAIL": "", "WHATSAPP": intl if intl.startswith("491") else "",
-        "MARKEN": "", "INSTAGRAM_HANDLE": "", "INSTAGRAM_URL": "#", "FACEBOOK_URL": "#",
+        "BOOKING_URL": "", "BOOKING_ANBIETER": "", "BOOKING_DATENSCHUTZ_URL": "", "MARKEN": "", "INSTAGRAM_HANDLE": "", "INSTAGRAM_URL": "#", "FACEBOOK_URL": "#",
         "MAPS_EMBED_URL": f"https://www.google.com/maps?q={maps_q}&output=embed",
         "MAPS_LINK": p.get("googleMapsUri", f"https://maps.google.com/?q={maps_q}"),
         "GOOGLE_REVIEWS_URL": p.get("googleMapsUri", ""), "GOOGLE_RATING": rating, "GOOGLE_REVIEW_COUNT": count,
@@ -264,21 +264,26 @@ def localize_fonts(out):
 def offer_pdf(cfg, out):
     a = json.load(open(os.path.join(ROOT, "generator", "angebot.json"), encoding="utf-8"))
     rows = "".join(
-        f"<div class='p'><h2>{html.escape(p['name'])}</h2><div class='price'>{html.escape(p['preis'])}</div>"
+        f"<div class='p'><h2>{html.escape(p['name'])}</h2><div class='ut'>{html.escape(p.get('untertitel', ''))}</div>"
+        f"<div class='price'>{html.escape(p['preis'])}</div>"
         f"<ul>{''.join(f'<li>{html.escape(x)}</li>' for x in p['leistungen'])}</ul></div>" for p in a["pakete"])
     addr = ", ".join(x for x in (cfg["ADDRESS_STREET"], f"{cfg['ADDRESS_ZIP']} {cfg['ADDRESS_CITY']}".strip()) if x)
     extras = "".join(f"<tr><td>{html.escape(e[0])}</td><td>{html.escape(e[1])}</td></tr>" for e in a["extras"])
+    buchung = "".join(f"<tr><td><b>{html.escape(b[0])}</b><br><span class='ut'>{html.escape(b[2])}</span></td>"
+                      f"<td class='nw'>{html.escape(b[1])}</td></tr>" for b in a.get("buchung", []))
     doc = f"""<!doctype html><html lang="de"><meta charset="utf-8"><style>
 body{{font-family:Helvetica,Arial,sans-serif;color:#222;margin:40px;font-size:11pt}} h1{{color:#9a7a4a;margin:0}}
-.sub{{color:#666;margin-bottom:24px}} .grid{{display:grid;grid-template-columns:1fr 1fr;gap:14px}}
+.sub{{color:#666;margin-bottom:24px}} .grid{{display:grid;grid-template-columns:repeat({min(len(a['pakete']), 3)},1fr);gap:14px}}
+.ut{{color:#666;font-size:9.5pt}} .nw{{white-space:nowrap;text-align:right;font-weight:bold;vertical-align:top}}
 .p{{border:1px solid #ddd;border-radius:8px;padding:14px;page-break-inside:avoid}} .p h2{{margin:0;font-size:14pt}}
 .price{{font-size:15pt;font-weight:bold;color:#9a7a4a;margin:6px 0}} li{{margin:3px 0}} table{{width:100%;border-collapse:collapse}}
 td{{border-bottom:1px solid #eee;padding:5px}} .small{{color:#666;font-size:9pt;margin-top:20px}}</style>
 <p>{html.escape(a['anbieter'])}</p><h1>Angebot: Webseite für {html.escape(cfg['SALON_NAME'])}</h1>
 <div class="sub">{html.escape(addr + " · " if addr else "")}Datum {date.today():%d.%m.%Y} · gültig {a['gueltig_tage']} Tage</div>
 <p>Vielen Dank für Ihr Interesse. Eine Vorschau Ihrer neuen Webseite haben wir bereits erstellt (7 Seiten: Start, Leistungen
-& Preise, Team, Galerie, Termin, Kontakt, Impressum/Datenschutz). Wählen Sie das passende Paket:</p>
-<div class="grid">{rows}</div><h3>Zusatzleistungen</h3><table>{extras}</table>
+& Preise, Team, Galerie, Termin, Kontakt, Impressum/Datenschutz). Wählen Sie das passende Modell:</p>
+<div class="grid">{rows}</div>{f'<h3>Online-Terminbuchung (optional)</h3><table>{buchung}</table>' if buchung else ''}
+<h3>Zusatzleistungen</h3><table>{extras}</table>
 <p class="small">{html.escape(a['hinweis'])}</p></html>"""
     h = os.path.join(out, "angebot.html")
     open(h, "w", encoding="utf-8").write(doc)

@@ -87,6 +87,14 @@
       <p>Wenn Sie uns per Kontaktformular oder Terminanfrage Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.</p>
       <p>Die Verarbeitung der in das Kontaktformular eingegebenen Daten erfolgt somit ausschließlich auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Sie können diese Einwilligung jederzeit widerrufen.</p>
 
+      ${C.BOOKING_URL ? `
+      <h3>Online-Terminbuchung${C.BOOKING_ANBIETER ? ` über ${C.BOOKING_ANBIETER}` : ''}</h3>
+      <p>Für die Online-Terminbuchung nutzen wir ${C.BOOKING_ANBIETER ? `den Dienst ${C.BOOKING_ANBIETER}` : 'einen externen Buchungsdienst'}. Wenn Sie auf „Termin buchen“ klicken, werden Sie auf die Buchungsseite des Anbieters weitergeleitet. Erst dann werden dort Daten verarbeitet; beim bloßen Besuch unserer Webseite wird keine Verbindung zum Anbieter hergestellt.</p>
+      <p>Bei der Buchung werden die von Ihnen eingegebenen Daten verarbeitet (in der Regel Name, Kontaktdaten, gewünschte Leistung, Termin und ggf. Mitarbeiter/in), um den Termin zu vereinbaren, zu bestätigen und Sie bei Bedarf zu erinnern. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung und -durchführung). Erinnerungen per E-Mail oder SMS erfolgen, soweit Sie diese ausgewählt haben, auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).</p>
+      <p>Der Anbieter verarbeitet die Daten in unserem Auftrag; mit ihm besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO. Die Daten werden gelöscht, sobald sie für den Zweck nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten bestehen.</p>
+      ${C.BOOKING_DATENSCHUTZ_URL ? `<p>Weitere Informationen finden Sie in der Datenschutzerklärung des Anbieters: <a href="${C.BOOKING_DATENSCHUTZ_URL}" target="_blank" rel="noopener">${C.BOOKING_DATENSCHUTZ_URL}</a></p>` : ''}
+      ` : ''}
+
       <h3>Server-Log-Dateien</h3>
       <p>Der Provider der Seiten erhebt und speichert automatisch Informationen in sogenannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt. Dies sind: Browsertyp und -version, verwendetes Betriebssystem, Referrer-URL, Hostname des zugreifenden Rechners, Uhrzeit der Serveranfrage sowie IP-Adresse.</p>
 

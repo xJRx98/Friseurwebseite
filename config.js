@@ -24,6 +24,9 @@ const SALON_CONFIG = {
   WHATSAPP:         "4989462483550",
 
   // ── SOCIAL MEDIA ─────────────────────────────────────────
+  BOOKING_URL:      "",   // Buchungsseite des Anbieters, z. B. https://www.etermin.net/salonname – leer = eigenes Anfrageformular
+  BOOKING_ANBIETER: "",   // z. B. "eTermin" (für die Datenschutzerklärung)
+  BOOKING_DATENSCHUTZ_URL: "",  // Link zur Datenschutzerklärung des Anbieters
   MARKEN:           "",   // z. B. "Wella, Olaplex, Davines" – leer = Zeile ausgeblendet
   INSTAGRAM_HANDLE: "@lisas.hairstyling",
   INSTAGRAM_URL:    "https://www.instagram.com/lisas.hairstyling",

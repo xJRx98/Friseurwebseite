@@ -98,3 +98,15 @@ function initScrollAnimations() {
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 }
+
+// ── ONLINE-BUCHUNG ────────────────────────────────────────────
+// Ist BOOKING_URL gesetzt (z. B. eTermin), führen alle „Termin buchen“-Links zur Buchungsseite des Anbieters.
+// Bewusst als Link statt eingebettetem Fenster: Die Webseite lädt nichts vom Anbieter, solange niemand klickt.
+document.addEventListener('DOMContentLoaded', () => {
+  const url = SALON_CONFIG.BOOKING_URL;
+  if (!url) return;
+  if (/termin\.html$/.test(location.pathname)) { location.replace(url); return; }
+  document.querySelectorAll('a[href="termin.html"]').forEach(a => {
+    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+  });
+});

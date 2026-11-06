@@ -49,6 +49,13 @@ Farbkonzepte: 1 Schwarz-Weiß, 2 Nude & Champagner, 3 Bordeaux, 4 Cognac & Creme
 Erweitern in `generator/designs.py`: Designs sind CSS-Ergänzungen (`design.css`, wird zuletzt geladen; `{HERO_IMG}` =
 Titelbild = erstes Galeriebild), Farbkonzepte sind Paletten (Akzent muss stark zum Hintergrund kontrastieren).
 
+## Online-Terminbuchung
+Im Excel-Blatt Grunddaten „Buchungslink“ (z. B. eTermin-Buchungsseite), „Buchungs-Anbieter“ und optional den
+Datenschutz-Link des Anbieters eintragen. Dann führen alle „Termin buchen“-Schaltflächen zum Anbieter (neuer Tab),
+`termin.html` leitet weiter, und die Datenschutzerklärung erhält einen Abschnitt zur Online-Terminbuchung.
+Ohne Buchungslink bleibt das eigene Anfrageformular. Eingebunden wird bewusst als Link, nicht als eingebettetes
+Fenster: So lädt die Seite nichts vom Anbieter, und es ist dafür kein Cookie-Banner nötig.
+
 ## Salon-Daten per Excel
 - Leere Vorlage: `generator/salon_daten_vorlage.xlsx` (neu erzeugen mit `.venv/bin/python generator/excel_daten.py vorlage`).
 - Pro Salon eine Kopie ausfüllen; Fotos in denselben Ordner legen und den Dateinamen eintragen.

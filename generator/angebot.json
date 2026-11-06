@@ -2,21 +2,77 @@
   "anbieter": "[Ihr Name] · [Straße] · [PLZ Ort] · [E-Mail] · [Telefon]",
   "gueltig_tage": 30,
   "pakete": [
-    {"name": "1 · Code-Paket", "preis": "390 € einmalig",
-     "leistungen": ["Fertige Webseite als HTML-Code (ZIP), 7 Seiten", "Inhalte, Öffnungszeiten, Preise und Bilder des Salons eingepflegt",
-                    "Mobil optimiert", "1 Korrekturrunde", "Hosting und Domain organisieren Sie selbst"]},
-    {"name": "2 · Start", "preis": "590 € einmalig, ab dem 2. Jahr 15 €/Monat",
-     "leistungen": ["Alles aus dem Code-Paket", "Einrichtung von Domain, Hosting und SSL-Verschlüsselung",
-                    "1 Jahr Hosting inklusive", "Impressum und Datenschutzerklärung technisch eingebunden", "2 Korrekturrunden"]},
-    {"name": "3 · Sorglos", "preis": "290 € einmalig + 39 €/Monat",
-     "leistungen": ["Alles aus „Start“", "Hosting, Domain und Backups laufend inklusive",
-                    "Pflege: bis zu 2 Änderungen pro Monat (Preise, Öffnungszeiten, Bilder, Texte)", "Technische Updates und Überwachung",
-                    "Mindestlaufzeit 12 Monate"]},
-    {"name": "4 · Premium", "preis": "490 € einmalig + 69 €/Monat",
-     "leistungen": ["Alles aus „Sorglos“", "Anbindung einer Online-Terminbuchung", "Optimierung des Google-Unternehmensprofils",
-                    "Unbegrenzte kleine Änderungen", "Monatlicher Kurzbericht zu Besuchern"]}
+    {
+      "name": "1 · Einmalig",
+      "untertitel": "Webseite zum Selbst-Hosten",
+      "preis": "490 € einmalig",
+      "leistungen": [
+        "Fertige Webseite mit 7 Seiten als Dateien (ZIP)",
+        "Inhalte, Preise, Öffnungszeiten, Team und Bilder eingepflegt",
+        "Design und Farbkonzept nach Wahl, für Handy optimiert",
+        "1 Korrekturrunde",
+        "Hosting, Domain, SSL und Rechtstexte organisiert der Salon selbst",
+        "Spätere Änderungen je 35 €"
+      ]
+    },
+    {
+      "name": "2 · Einrichtung + Abo",
+      "untertitel": "Wir kümmern uns um alles",
+      "preis": "249 € einmalig + 39 €/Monat",
+      "leistungen": [
+        "Alles aus „Einmalig“, 2 Korrekturrunden",
+        "Hosting, .de-Domain, SSL-Verschlüsselung und Backups",
+        "Impressum und Datenschutzerklärung von einer IT-Rechtskanzlei, laufend aktualisiert",
+        "Bis zu 2 Änderungen pro Monat (Preise, Öffnungszeiten, Bilder, Texte)",
+        "Technische Updates und Überwachung",
+        "Monatlich kündbar"
+      ]
+    },
+    {
+      "name": "3 · Nur Abo",
+      "untertitel": "Ohne Startkosten",
+      "preis": "0 € einmalig + 59 €/Monat",
+      "leistungen": [
+        "Alles aus „Einrichtung + Abo“",
+        "Keine Einrichtungskosten",
+        "Mindestlaufzeit 12 Monate, danach monatlich kündbar"
+      ]
+    }
   ],
-  "extras": [["Zusätzliche Seite", "90 €"], ["Logo-Überarbeitung", "ab 150 €"], ["Zweite Sprache (z. B. Englisch)", "ab 190 €"],
-             ["Einzelne Änderung außerhalb eines Pakets", "35 €"]],
-  "hinweis": "Alle Preise [netto zzgl. 19 % USt. / gemäß § 19 UStG ohne Umsatzsteuer – bitte anpassen]. Für Impressum und Datenschutzerklärung liefert der Inhaber die Pflichtangaben; die rechtliche Verantwortung für die Inhalte liegt beim Seitenbetreiber. Fotos aus Google dienen nur der Vorschau."
+  "extras": [
+    [
+      "Zusätzliche Seite",
+      "90 €"
+    ],
+    [
+      "Logo-Überarbeitung",
+      "ab 150 €"
+    ],
+    [
+      "Zweite Sprache (z. B. Englisch)",
+      "ab 190 €"
+    ],
+    [
+      "Einzelne Änderung außerhalb eines Abos",
+      "35 €"
+    ]
+  ],
+  "hinweis": "Alle Preise [netto zzgl. 19 % USt. / gemäß § 19 UStG ohne Umsatzsteuer – bitte anpassen]. Für Impressum und Datenschutzerklärung liefert der Inhaber die Pflichtangaben; die rechtliche Verantwortung für die Inhalte liegt beim Seitenbetreiber. Fotos aus Google dienen nur der Vorschau.",
+  "buchung": [
+    [
+      "Online-Terminbuchung mit eTermin – Konto auf Ihren Namen",
+      "69 € einmalig",
+      "Einrichtung von Leistungen, Preisen, Mitarbeitern und Arbeitszeiten, Verknüpfung mit allen „Termin buchen“-Schaltflächen. Das eTermin-Abo (ca. 19 €/Monat) schließen Sie direkt bei eTermin ab."
+    ],
+    [
+      "Online-Terminbuchung mit eTermin – Rundum-Service",
+      "35 €/Monat",
+      "Wir stellen und verwalten das eTermin-Konto, inklusive aller eTermin-Gebühren, Einrichtung und Pflege. Laufzeit wie das Webseiten-Abo, mindestens 12 Monate."
+    ],
+    [
+      "Andere Buchungssoftware einbinden (z. B. Studiobookr, Salonized, Treatwell)",
+      "ab 99 € einmalig",
+      "Verknüpfung Ihres bestehenden Buchungssystems mit der Webseite; Kosten des Anbieters tragen Sie direkt."
+    ]
+  ]
 }
