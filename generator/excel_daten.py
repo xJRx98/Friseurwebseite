@@ -15,11 +15,12 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.worksheet.datavalidation import DataValidation
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import designs  # noqa: E402
+
 GRUNDDATEN = [  # (Schlüssel, Bezeichnung, Hinweis)
-    ("DESIGN", "Design (Nummer 1–10)", "1 Klassik Elegant, 2 Modern Split, 3 Bold Statement, 4 Boutique Bogen, 5 Minimal Editorial, "
-                                        "6 Glass Soft, 7 Retro Salon, 8 Brutalist, 9 Luxus Gerahmt, 10 Organisch Weich"),
-    ("FARBE", "Farbkonzept (Nummer 1–10)", "1 Gold Noir, 2 Champagner, 3 Rosé, 4 Salbei, 5 Schwarz-Weiß, 6 Midnight, "
-                                         "7 Anthrazit & Kupfer, 8 Smaragd, 9 Terracotta, 10 Lavendel"),
+    ("DESIGN", "Design (Nummer 1–10)", ", ".join(f"{i} {d['name']}" for i, d in enumerate(designs.DESIGNS, 1))),
+    ("FARBE", "Farbkonzept (Nummer 1–10)", ", ".join(f"{i} {f['name']}" for i, f in enumerate(designs.FARBEN, 1))),
     ("SALON_NAME", "Name des Salons", "leer = Name aus Google"),
     ("TAGLINE", "Slogan", "z. B. „Schönheit beginnt mit dem richtigen Schnitt.“"),
     ("GRUENDUNGSJAHR", "Gründungsjahr", "z. B. 2014 – erscheint als „Seit 2014 …“"),

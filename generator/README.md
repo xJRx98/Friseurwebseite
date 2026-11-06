@@ -27,21 +27,24 @@ Link und Excel sind jeweils optional (mindestens eins von beiden). `--nicht-oeff
 Farbkonzept), Teil B die 10 Farbkonzepte (im gewählten Design), je mit Startseite und Leistungsseite; Varianten
 unter `vorschau/<salon>/designs/` (Bilder geteilt, Klick öffnet die komplette Seite).
 
+Die Designs und Farbkonzepte sind aus 262 Startseiten Münchner Friseure abgeleitet (Verzeichnis Gelbe Seiten,
+November 2026): die dort häufigsten Stilrichtungen und Farbfamilien, nachempfunden, keine Kopie einzelner Seiten.
+
 | Nr. | Design | Startbereich | Formen / Details | Schriften |
 |---|---|---|---|---|
-| 1 | Klassik Elegant | Text auf Farbverlauf | feine Linien, eckig | Cormorant Garamond / Jost |
-| 2 | Modern Split | Text links, Foto rechts | rund, weiche Schatten | Manrope / Inter |
-| 3 | Bold Statement | Vollbild-Foto, zentriert, Großbuchstaben | kräftige Rahmen, Akzentbalken | Oswald / Barlow |
-| 4 | Boutique Bogen | Foto im Torbogen | Bögen, Pillen-Schaltflächen, ✦ | Playfair Display / Lato |
-| 5 | Minimal Editorial | große Magazin-Schrift, kleines S/W-Foto | nur Linien, S/W-Bilder | Bodoni Moda / Inter |
-| 6 | Glass Soft | weichgezeichnetes Foto, Text auf Glasfläche | durchscheinende Karten, Unschärfe | Plus Jakarta Sans |
-| 7 | Retro Salon | rundes Foto mit Ring, Streifen unten | dicke Rahmen, Pillen-Etiketten | Abril Fatface / Poppins |
-| 8 | Brutalist | Raster, Foto im Kasten mit versetztem Schatten | harte Rahmen und Schatten, Markierung | Archivo Black / Space Grotesk |
+| 1 | Klassik Vollbild | Salonfoto vollflächig, dunkler Verlauf, Text links | feine Linien, eckig | Cormorant Garamond / Jost |
+| 2 | Hell & Luftig | zentrierter Text, Foto als breites Band unten | viel Weißraum, Versalien, nur Linien | Josefin Sans / Raleway |
+| 3 | Modern Split | Text links, Foto rechts | rund, weiche Schatten | Montserrat / Open Sans |
+| 4 | Typo-Statement | Vollbild-Foto, riesige Großbuchstaben | kräftige Rahmen, Akzentbalken | Oswald / Barlow |
+| 5 | Editorial Schwarz-Weiß | große Magazin-Schrift, kleines S/W-Foto | nur Linien, S/W-Bilder | Bodoni Moda / Inter |
+| 6 | Boutique Handschrift | Foto im Torbogen, Schreibschrift-Akzente | Bögen, Pillen-Schaltflächen, ✦ | Playfair Display / Lato / Great Vibes |
+| 7 | Barbershop | dunkles Vollbild, Abzeichen, Barber-Streifen | Slab-Schrift, ✂, Streifen | Alfa Slab One / Roboto |
+| 8 | Natur & Bio | Foto in fließender Form, Farbfleck | organische Bildformen, ❧ | Lora / Nunito |
 | 9 | Luxus Gerahmt | Vollbild-Foto im Doppelrahmen, zentriert | Doppelrahmen, ◆-Ornamente, Versalien | Cinzel / Montserrat |
-| 10 | Organisch Weich | Foto in fließender Form, Farbfleck | organische Bildformen, sehr rund | Quicksand / Nunito |
+| 10 | Freundlich & Nah | Vollbild-Foto mit heller Textkarte | Etiketten, runde Karten, Farbkante | Poppins / Nunito Sans |
 
-Farbkonzepte: 1 Gold Noir, 2 Champagner, 3 Rosé, 4 Salbei, 5 Schwarz-Weiß, 6 Midnight, 7 Anthrazit & Kupfer,
-8 Smaragd, 9 Terracotta, 10 Lavendel.
+Farbkonzepte: 1 Schwarz-Weiß, 2 Nude & Champagner, 3 Bordeaux, 4 Cognac & Creme, 5 Salbei & Leinen, 6 Marineblau,
+7 Beere & Rosé, 8 Gold Noir, 9 Anthrazit & Kupfer, 10 Petrol & Mint.
 
 Erweitern in `generator/designs.py`: Designs sind CSS-Ergänzungen (`design.css`, wird zuletzt geladen; `{HERO_IMG}` =
 Titelbild = erstes Galeriebild), Farbkonzepte sind Paletten (Akzent muss stark zum Hintergrund kontrastieren).

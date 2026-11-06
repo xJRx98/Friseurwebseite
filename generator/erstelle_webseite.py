@@ -341,7 +341,7 @@ def main():
     ap.add_argument("link", nargs="?", default="", help="Google-Maps-Link des Salons (optional mit --excel)")
     ap.add_argument("--excel", help="ausgefüllte Salon-Daten (Vorlage: generator/excel_daten.py vorlage)")
     ap.add_argument("--nicht-oeffnen", action="store_true", help="Vorschau und PDF nicht automatisch öffnen")
-    ap.add_argument("--design", help="Design 1–10 oder Name (Standard: aus Excel, sonst 1 Klassik Elegant)")
+    ap.add_argument("--design", help="Design 1–10 oder Name (Standard: aus Excel, sonst 1 Klassik Vollbild)")
     ap.add_argument("--farbe", help="Farbkonzept 1–10, Name oder eigenes (aus eigene_farben.json)")
     ap.add_argument("--alle-designs", action="store_true",
                     help="Kundenauswahl: 10 Designs + 10 Farbkonzepte als Übersicht/PDF")

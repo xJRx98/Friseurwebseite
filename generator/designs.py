@@ -1,4 +1,5 @@
-"""10 Designs (Aufbau, Formen, Typografie, Schriften) x 10 Farbkonzepte für die Friseur-Vorlage.
+"""10 Designs (Aufbau, Formen, Typografie, Schriften) x 10 Farbkonzepte für die Friseur-Vorlage,
+abgeleitet aus den Webseiten Münchner Friseure.
 
 Angewendet auf eine Kopie der Webseite, die Vorlage selbst bleibt unverändert:
   - Farbkonzept: ersetzt die Farbvariablen und die festen Farbwerte der Vorlage (Gold mit Transparenz, Linien,
@@ -9,53 +10,91 @@ Angewendet auf eine Kopie der Webseite, die Vorlage selbst bleibt unverändert:
 import os
 import re
 
+# Abgeleitet aus 262 Startseiten Münchner Friseure (Gelbe Seiten, November 2026): Hintergrund 44 % weiß, 16 % hell
+# getönt, 17 % dunkel; Akzente nach Häufigkeit: keiner (Schwarz-Weiß), Bordeaux, Nude/Champagner, Kupfer/Cognac, Navy,
+# Grün/Salbei, Beere/Magenta, Petrol.
 FARBEN = [
-    dict(key="gold-noir", name="Gold Noir", text_de="Dunkel mit Gold – edel und klassisch.", mode="dark",
-         black="#111010", dark="#1a1815", mid="#2e2b27", text="#e8e2d9", muted="#a09890",
-         accent="#c9a96e", accent_light="#e8d5b0", accent_dark="#9a7a4a"),
-    dict(key="champagner", name="Champagner", text_de="Creme mit dunklem Gold – hell und warm.", mode="light",
-         black="#f1ebe1", dark="#faf7f2", mid="#ece4d8", text="#2b2622", muted="#6f665c",
-         accent="#8a6a3a", accent_light="#b8955f", accent_dark="#6b5029"),
-    dict(key="rose", name="Rosé", text_de="Zartes Rosé mit Beerenton – feminin.", mode="light",
-         black="#f6eae8", dark="#fcf7f6", mid="#f1e0dd", text="#3a2a2a", muted="#7d6766",
-         accent="#a8505a", accent_light="#c97b84", accent_dark="#843a43"),
-    dict(key="salbei", name="Salbei", text_de="Salbeigrün und Leinen – natürlich und ruhig.", mode="light",
-         black="#e9ece3", dark="#f5f5f0", mid="#e2e6da", text="#26302a", muted="#5f6b62",
-         accent="#4e6e52", accent_light="#7f9c82", accent_dark="#3a553e"),
-    dict(key="schwarz-weiss", name="Schwarz-Weiß", text_de="Reines Schwarz-Weiß – klar und zeitlos.", mode="light",
-         black="#f2f2f2", dark="#ffffff", mid="#ebebeb", text="#111111", muted="#666666",
+    dict(key="schwarz-weiss", name="Schwarz-Weiß", text_de="Weiß mit Schwarz – der häufigste Münchner Salon-Look, klar und zeitlos.",
+         mode="light", black="#f2f2f2", dark="#ffffff", mid="#ebebeb", text="#111111", muted="#666666",
          accent="#111111", accent_light="#444444", accent_dark="#000000"),
-    dict(key="midnight", name="Midnight", text_de="Nachtblau mit hellem Blau – modern und seriös.", mode="dark",
-         black="#0b1120", dark="#111a2e", mid="#1b2742", text="#e6ebf5", muted="#94a0b8",
-         accent="#9cc3ff", accent_light="#c6dcff", accent_dark="#6f9de0"),
-    dict(key="anthrazit-kupfer", name="Anthrazit & Kupfer", text_de="Anthrazit mit Kupfer – markant, ideal für Barbershops.",
+    dict(key="nude", name="Nude & Champagner", text_de="Warmes Creme mit Nude-Braun – weich, hell und hochwertig.", mode="light",
+         black="#f2ebe2", dark="#faf6f1", mid="#ece2d6", text="#2e2620", muted="#75685c",
+         accent="#86664b", accent_light="#b39577", accent_dark="#664c36"),
+    dict(key="bordeaux", name="Bordeaux", text_de="Weiß mit Weinrot – elegant, etabliert, gern bei Meisterbetrieben.", mode="light",
+         black="#f4eeec", dark="#fcfaf9", mid="#f0e6e3", text="#2a1d1d", muted="#73605f",
+         accent="#7c2234", accent_light="#a5525f", accent_dark="#5a1624"),
+    dict(key="cognac", name="Cognac & Creme", text_de="Creme mit Cognac und Kupfer – warm, handwerklich, gemütlich.", mode="light",
+         black="#efe6da", dark="#f8f3ec", mid="#eadcca", text="#33261c", muted="#77665a",
+         accent="#9a5527", accent_light="#c08458", accent_dark="#743f1b"),
+    dict(key="salbei", name="Salbei & Leinen", text_de="Leinen mit Salbeigrün – natürlich, ideal für Natur- und Biofriseure.",
+         mode="light", black="#e9ece3", dark="#f6f6f1", mid="#e2e6da", text="#26302a", muted="#5f6b62",
+         accent="#4c6a50", accent_light="#7f9c82", accent_dark="#3a553e"),
+    dict(key="marine", name="Marineblau", text_de="Weiß mit Marineblau – seriös, frisch und modern.", mode="light",
+         black="#eef1f6", dark="#f9fafc", mid="#e6eaf2", text="#1b2238", muted="#5f6880",
+         accent="#2e4677", accent_light="#5d77a8", accent_dark="#1f3157"),
+    dict(key="beere", name="Beere & Rosé", text_de="Zartes Rosé mit Beerenton – feminin und modisch.", mode="light",
+         black="#f6eaee", dark="#fdf8f9", mid="#f2e2e8", text="#33202a", muted="#7a6470",
+         accent="#8c2a5c", accent_light="#b85d8a", accent_dark="#681d43"),
+    dict(key="gold-noir", name="Gold Noir", text_de="Schwarz mit Gold – edel, für Premium-Salons und Abendstimmung.", mode="dark",
+         black="#0f0e0d", dark="#181614", mid="#2a2724", text="#ece6dc", muted="#a39b91",
+         accent="#c9a96e", accent_light="#e8d5b0", accent_dark="#9a7a4a"),
+    dict(key="anthrazit-kupfer", name="Anthrazit & Kupfer", text_de="Anthrazit mit Kupfer – markant, typisch für Barbershops.",
          mode="dark", black="#0e0e0e", dark="#171717", mid="#262626", text="#ededed", muted="#9a9a9a",
          accent="#d07a45", accent_light="#e8a77d", accent_dark="#a65a2c"),
-    dict(key="smaragd", name="Smaragd", text_de="Tiefes Smaragdgrün mit Gold – luxuriös.", mode="dark",
-         black="#07130e", dark="#0d1f17", mid="#173129", text="#eaf2ec", muted="#9db5a7",
-         accent="#d8b24a", accent_light="#ead18a", accent_dark="#a88626"),
-    dict(key="terracotta", name="Terracotta", text_de="Sand und Terrakotta – warm und lebendig.", mode="light",
-         black="#f3e8dc", dark="#fbf6f0", mid="#eedfcf", text="#3b2a20", muted="#7d6253",
-         accent="#a94d28", accent_light="#cf7b56", accent_dark="#843918"),
-    dict(key="lavendel", name="Lavendel", text_de="Lavendel und Violett – frisch und kreativ.", mode="light",
-         black="#efeaf8", dark="#f9f7fd", mid="#e7e0f4", text="#2a2340", muted="#6e6585",
-         accent="#5e43a0", accent_light="#8d75c9", accent_dark="#45307d"),
+    dict(key="petrol", name="Petrol & Mint", text_de="Tiefes Petrol mit Mint – ruhig, frisch und eigenständig.", mode="dark",
+         black="#0a1d21", dark="#10282d", mid="#1a3a40", text="#e7f1f0", muted="#98b3b2",
+         accent="#86cbbd", accent_light="#b6e2d8", accent_dark="#5aa595"),
 ]
 
 ROUND = ".btn-primary,.btn-outline,.btn-dark,.nav-cta,.submit-btn,.btn-next,.time-slot"
 BOXES = ".card,.review-card,.booking-panel,.sidebar-card"
 IMGS = ".img-placeholder,.about-img-wrap,.gallery-img,.gallery-item,.team-member-img,.map-container"
 LINE = "color-mix(in srgb, var(--gold) 25%, transparent)"
+# Text auf Fotos ist immer hell, egal welches Farbkonzept
+ON_PHOTO = """.hero-title,.hero-eyebrow{color:#fff}
+.hero-title em,.hero-eyebrow{color:color-mix(in srgb,var(--gold) 50%,#fff)}
+.hero-subtitle{color:rgba(255,255,255,.86)}
+.hero-scroll{color:rgba(255,255,255,.7)}
+.hero .btn-outline{color:#fff!important;border-color:rgba(255,255,255,.6)!important}"""
 
+# 10 Stilrichtungen, die auf Münchner Friseur-Webseiten immer wieder vorkommen (nachempfunden, keine Kopie einzelner Seiten)
 DESIGNS = [
-    dict(key="klassik", name="Klassik Elegant",
-         text_de="Text auf Farbverlauf, feine Linien, klassische Serifenschrift – zeitlos und edel.",
+    dict(key="klassik", name="Klassik Vollbild",
+         text_de="Salonfoto über die ganze Breite mit dunklem Verlauf, Text links in Serifenschrift – der häufigste Münchner Stil.",
          head="Cormorant Garamond", body="Jost",
          gfonts="family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500",
-         css=""),
+         css=f"""
+.hero-bg{{background:linear-gradient(90deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.5) 50%,rgba(0,0,0,.12) 100%),url('{{HERO_IMG}}') center/cover}}
+.hero-pattern,.hero-glow{{display:none}}
+{ON_PHOTO}"""),
+    dict(key="hell", name="Hell & Luftig",
+         text_de="Viel Weißraum, zentrierter Text in feinen Großbuchstaben, Foto als breites Band – ruhig und modern.",
+         head="Josefin Sans", body="Raleway", gfonts="family=Josefin+Sans:wght@300;400;600&family=Raleway:wght@300;400;500;600",
+         css=f"""
+.hero{{flex-direction:column;justify-content:flex-start;align-items:center;text-align:center;padding-top:calc(var(--nav-height) + 7vh)}}
+.hero-bg{{background:var(--dark)}}
+.hero-pattern,.hero-glow,.hero-scroll{{display:none}}
+.hero-content{{margin:0 auto;max-width:860px}}
+.hero-title{{font-size:clamp(2.2rem,4.4vw,3.6rem);font-weight:300;text-transform:uppercase;letter-spacing:.12em;line-height:1.2}}
+.hero-title em{{font-style:normal;font-weight:600}}
+.hero-subtitle{{margin-left:auto;margin-right:auto}}
+.hero-actions{{justify-content:center}}
+.hero::after{{content:"";position:absolute;left:5vw;right:5vw;bottom:0;height:33vh;background:url('{{HERO_IMG}}') center 35%/cover}}
+nav{{border-bottom:1px solid {LINE}}}
+.nav-logo{{text-transform:uppercase;letter-spacing:.3em;font-weight:400;font-size:1.2rem}}
+.nav-links a{{letter-spacing:.22em;font-size:.72rem}}
+.section-title{{text-transform:uppercase;letter-spacing:.1em;font-weight:300}}
+.section-title em{{font-style:normal;font-weight:600}}
+.section-label{{letter-spacing:.35em}}
+.divider{{width:40px}}
+{BOXES}{{background:transparent!important;border:none!important;border-bottom:1px solid {LINE}!important}}
+{ROUND}{{letter-spacing:.24em!important;font-weight:400!important}}
+.services-grid{{border:none!important;gap:0}}
+.service-item{{border:none!important;border-bottom:1px solid {LINE}!important}}
+@media (max-width:900px){{.hero::after{{height:28vh}}}}"""),
     dict(key="modern-split", name="Modern Split",
-         text_de="Geteilter Startbereich mit großem Foto, runde Formen, weiche Schatten – freundlich und modern.",
-         head="Manrope", body="Inter", gfonts="family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500",
+         text_de="Geteilter Startbereich: Text links, großes Foto rechts, runde Formen, weiche Schatten – freundlich und modern.",
+         head="Montserrat", body="Open Sans", gfonts="family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@300;400;500;600",
          css=f"""
 .hero-pattern,.hero-glow,.hero-scroll{{display:none}}
 .hero-bg{{background:var(--dark)}}
@@ -75,19 +114,19 @@ nav{{border-bottom:none;box-shadow:0 4px 24px rgba(0,0,0,.08)}}
 .divider{{height:4px;width:48px;border-radius:4px}}
 input,select,textarea{{border-radius:12px!important}}
 @media (max-width:900px){{.hero::after{{width:100%;border-radius:0;opacity:.18;top:0;bottom:0}}.hero-content{{max-width:100%}}}}"""),
-    dict(key="bold", name="Bold Statement",
-         text_de="Vollbild-Foto, zentrierte Großbuchstaben, kräftige Rahmen – selbstbewusst und markant.",
+    dict(key="statement", name="Typo-Statement",
+         text_de="Vollbild-Foto, riesige zentrierte Großbuchstaben, kräftige Rahmen – selbstbewusst, für junge Salons.",
          head="Oswald", body="Barlow", gfonts="family=Oswald:wght@400;500;600&family=Barlow:wght@300;400;500;600",
          css=f"""
 .hero{{justify-content:center;text-align:center}}
 .hero-bg{{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.7)),url('{{HERO_IMG}}') center/cover}}
 .hero-pattern,.hero-glow{{display:none}}
 .hero-content{{max-width:960px;margin:0 auto}}
-.hero-title{{text-transform:uppercase;font-weight:600;letter-spacing:.02em;color:#fff;font-size:clamp(3rem,8vw,6.5rem)}}
-.hero-title em{{font-style:normal;color:color-mix(in srgb, var(--gold) 55%, #fff)}}
-.hero-eyebrow{{color:color-mix(in srgb, var(--gold) 55%, #fff)}}
-.hero-subtitle{{margin-left:auto;margin-right:auto;color:rgba(255,255,255,.85)}}
-.hero-scroll{{color:rgba(255,255,255,.7)}}
+.hero-title{{text-transform:uppercase;font-weight:600;letter-spacing:.02em;font-size:clamp(3rem,8vw,6.5rem)}}
+.hero-title em{{font-style:normal}}
+.hero-subtitle{{margin-left:auto;margin-right:auto}}
+.hero-actions{{justify-content:center}}
+{ON_PHOTO}
 .section-title,.page-hero h1{{text-transform:uppercase;letter-spacing:.03em;font-weight:600}}
 .section-title em{{font-style:normal}}
 .section-label{{font-weight:600}}
@@ -97,27 +136,8 @@ input,select,textarea{{border-radius:12px!important}}
 .service-item:hover{{background:var(--gold)!important}}
 .service-item:hover .service-name,.service-item:hover .service-desc{{color:var(--dark)!important}}
 .nav-logo{{text-transform:uppercase;letter-spacing:.12em;font-weight:500}}"""),
-    dict(key="boutique", name="Boutique Bogen",
-         text_de="Bilder in Torbogen-Form, Pillen-Schaltflächen, feine Verzierungen – verspielt und hochwertig.",
-         head="Playfair Display", body="Lato", gfonts="family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700",
-         css=f"""
-.hero-pattern,.hero-glow{{display:none}}
-.hero-content{{max-width:55%}}
-.hero::after{{content:"";position:absolute;right:7vw;top:calc(var(--nav-height) + 7vh);bottom:9vh;width:min(32vw,440px);
-  background:url('{{HERO_IMG}}') center/cover;border-radius:999px 999px 0 0;
-  box-shadow:0 0 0 12px var(--dark),0 0 0 13px var(--gold)}}
-.hero-title em,.section-title em{{font-style:italic}}
-.about-img-wrap,.team-member-img,.gallery-item,.gallery-img{{border-radius:999px 999px 0 0;overflow:hidden}}
-{BOXES}{{border-radius:28px}}
-{ROUND}{{border-radius:999px!important}}
-.section-label::before{{content:"✦  "}}
-.divider{{width:140px;background:linear-gradient(to right,transparent,var(--gold),transparent)}}
-.services-grid{{border:none;gap:1.5rem;padding:2.5rem 5vw}}
-.service-item{{border:1px solid {LINE}!important;border-radius:200px 200px 28px 28px;padding-top:3rem}}
-.map-container,input,select,textarea{{border-radius:18px!important}}
-@media (max-width:900px){{.hero::after{{display:none}}.hero-content{{max-width:100%}}}}"""),
-    dict(key="editorial", name="Minimal Editorial",
-         text_de="Große Schrift wie in einem Magazin, viel Weißraum, nur Linien, Schwarz-Weiß-Bilder – reduziert und modern.",
+    dict(key="editorial", name="Editorial Schwarz-Weiß",
+         text_de="Große Schrift wie in einem Modemagazin, Schwarz-Weiß-Porträt, nur feine Linien – reduziert und urban.",
          head="Bodoni Moda", body="Inter", gfonts="family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600",
          css=f"""
 .hero{{align-items:flex-end;padding-bottom:12vh}}
@@ -141,75 +161,79 @@ nav{{border-bottom:1px solid var(--text)}}
 .gallery-img img,.team-member-img img,.about-img-wrap img,.gallery-item img{{filter:grayscale(1);transition:filter .5s}}
 .gallery-img:hover img,.team-member-img:hover img,.about-img-wrap:hover img,.gallery-item:hover img{{filter:none}}
 @media (max-width:900px){{.hero::after{{display:none}}}}"""),
-    dict(key="glass", name="Glass Soft",
-         text_de="Weichgezeichnetes Foto, Inhalte auf Glasflächen, sanfte Unschärfe – leicht und zeitgemäß.",
-         head="Plus Jakarta Sans", body="Plus Jakarta Sans", gfonts="family=Plus+Jakarta+Sans:wght@300;400;600;700;800",
-         css=f"""
-.hero{{justify-content:center;text-align:center}}
-.hero-bg{{background:linear-gradient(color-mix(in srgb,var(--dark) 55%,transparent),color-mix(in srgb,var(--dark) 70%,transparent)),
-  url('{{HERO_IMG}}') center/cover;filter:blur(5px);transform:scale(1.06)}}
-.hero-pattern,.hero-scroll{{display:none}}
-.hero-glow{{width:520px;height:520px;left:8%;right:auto;background:radial-gradient(circle,color-mix(in srgb,var(--gold) 45%,transparent) 0%,transparent 70%)}}
-.hero-content{{max-width:820px;margin:0 auto;padding:3rem 3.5rem;border-radius:30px;
-  background:color-mix(in srgb,var(--mid) 45%,transparent);backdrop-filter:blur(18px);
-  border:1px solid color-mix(in srgb,var(--text) 18%,transparent);box-shadow:0 30px 80px rgba(0,0,0,.2)}}
-.hero-subtitle{{margin:0 auto 1rem}}
-.hero-title,.section-title{{font-weight:700;letter-spacing:-0.02em}}
-.hero-title em,.section-title em{{font-style:normal}}
-nav{{background:color-mix(in srgb,var(--dark) 60%,transparent)!important;backdrop-filter:blur(20px);border-bottom:1px solid color-mix(in srgb,var(--text) 10%,transparent)}}
-.nav-links a{{text-transform:none;letter-spacing:0;font-size:.92rem}}
-{BOXES}{{background:color-mix(in srgb,var(--mid) 60%,transparent)!important;backdrop-filter:blur(14px);border-radius:24px;
-  border:1px solid color-mix(in srgb,var(--text) 12%,transparent)!important}}
-{ROUND}{{border-radius:14px!important}}
-{IMGS}{{border-radius:24px;overflow:hidden}}
-.services-grid{{border:none;gap:1rem;padding:2rem 5vw}}
-.service-item{{border:1px solid color-mix(in srgb,var(--text) 12%,transparent)!important;border-radius:22px;
-  background:color-mix(in srgb,var(--mid) 55%,transparent)}}
-input,select,textarea{{border-radius:12px!important}}"""),
-    dict(key="retro", name="Retro Salon",
-         text_de="Rundes Foto mit dickem Ring, Streifen und Pillen-Etiketten – fröhlich mit 70er-Charme.",
-         head="Abril Fatface", body="Poppins", gfonts="family=Abril+Fatface&family=Poppins:wght@300;400;500;600",
+    dict(key="boutique", name="Boutique Handschrift",
+         text_de="Schreibschrift-Akzente, Foto im Torbogen, Pillen-Schaltflächen – feminin und persönlich wie ein kleiner Salon.",
+         head="Playfair Display", body="Lato",
+         gfonts="family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Great+Vibes",
          css=f"""
 .hero-pattern,.hero-glow{{display:none}}
-.hero-bg{{background:linear-gradient(to top,var(--gold) 0 14px,var(--mid) 14px 28px,var(--gold-light) 28px 42px,var(--dark) 42px)}}
 .hero-content{{max-width:55%}}
-.hero::after{{content:"";position:absolute;right:8vw;top:50%;transform:translateY(-42%);width:min(30vw,420px);aspect-ratio:1;
-  border-radius:50%;background:url('{{HERO_IMG}}') center/cover;border:10px solid var(--gold);box-shadow:0 0 0 18px var(--mid)}}
-.hero-title{{font-weight:400}}
-.hero-title em,.section-title em{{font-style:normal;text-shadow:3px 3px 0 color-mix(in srgb,var(--gold) 30%,transparent)}}
-.section-title{{font-weight:400}}
-.section-label{{display:inline-block;background:var(--gold);color:var(--dark);padding:.25rem .9rem;border-radius:999px;font-weight:600}}
-{ROUND}{{border-radius:999px!important;border:3px solid var(--gold)!important;font-weight:600!important}}
-{BOXES}{{border-radius:28px;border:3px solid var(--gold)!important}}
-{IMGS}{{border-radius:28px;overflow:hidden;border:3px solid var(--gold)}}
-.divider{{height:10px;width:90px;background:repeating-linear-gradient(135deg,var(--gold) 0 6px,transparent 6px 12px)}}
-.services-grid{{border:none!important;gap:1rem;padding:2rem 5vw}}
-.service-item{{border:3px solid var(--gold)!important;border-radius:28px}}
+.hero::after{{content:"";position:absolute;right:7vw;top:calc(var(--nav-height) + 7vh);bottom:9vh;width:min(32vw,440px);
+  background:url('{{HERO_IMG}}') center/cover;border-radius:999px 999px 0 0;
+  box-shadow:0 0 0 12px var(--dark),0 0 0 13px var(--gold)}}
+.hero-title em,.section-title em{{font-family:'Great Vibes',cursive;font-style:normal;font-weight:400;font-size:1.3em;line-height:1}}
+.nav-logo{{font-family:'Great Vibes',cursive;font-size:2.1rem;letter-spacing:0}}
+.about-img-wrap,.team-member-img,.gallery-item,.gallery-img{{border-radius:999px 999px 0 0;overflow:hidden}}
+{BOXES}{{border-radius:28px}}
+{ROUND}{{border-radius:999px!important}}
+.section-label::before{{content:"✦  "}}
+.divider{{width:140px;background:linear-gradient(to right,transparent,var(--gold),transparent)}}
+.services-grid{{border:none;gap:1.5rem;padding:2.5rem 5vw}}
+.service-item{{border:1px solid {LINE}!important;border-radius:200px 200px 28px 28px;padding-top:3rem}}
+.map-container,input,select,textarea{{border-radius:18px!important}}
 @media (max-width:900px){{.hero::after{{display:none}}.hero-content{{max-width:100%}}}}"""),
-    dict(key="brutalist", name="Brutalist",
-         text_de="Harte Rahmen, versetzte Schatten, Raster und Markierungen – laut, mutig und unverwechselbar.",
-         head="Archivo Black", body="Space Grotesk",
-         gfonts="family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700",
+    dict(key="barber", name="Barbershop",
+         text_de="Dunkles Foto, kräftige Slab-Schrift, Abzeichen und Barber-Streifen – kernig, für Herrenfriseure.",
+         head="Alfa Slab One", body="Roboto", gfonts="family=Alfa+Slab+One&family=Roboto:wght@300;400;500;700",
          css=f"""
-nav{{border-bottom:3px solid var(--text)}}
+.hero{{justify-content:center;text-align:center}}
+.hero-bg{{background:linear-gradient(rgba(0,0,0,.62),rgba(0,0,0,.8)),url('{{HERO_IMG}}') center/cover}}
+.hero-pattern,.hero-glow{{display:none}}
+.hero-content{{max-width:900px;margin:0 auto}}
+.hero-eyebrow{{display:inline-block;border:2px solid currentColor;border-radius:999px;padding:.45rem 1.3rem}}
+.hero-title{{text-transform:uppercase;font-weight:400;letter-spacing:.02em;font-size:clamp(2.8rem,6.5vw,5.4rem)}}
+.hero-title em{{font-style:normal}}
+.hero-subtitle{{margin-left:auto;margin-right:auto}}
+.hero-actions{{justify-content:center}}
+{ON_PHOTO}
+.hero::after{{content:"";position:absolute;left:0;right:0;bottom:0;height:14px;
+  background:repeating-linear-gradient(-45deg,var(--gold) 0 14px,#fff 14px 28px,var(--gold-dark) 28px 42px,#fff 42px 56px)}}
+.nav-logo{{text-transform:uppercase;letter-spacing:.06em}}
+.section-title,.page-hero h1{{text-transform:uppercase;font-weight:400;letter-spacing:.01em}}
+.section-title em{{font-style:normal}}
+.section-label{{font-weight:700}}
+.section-label::before{{content:"✂  "}}
+{BOXES}{{border:2px solid var(--gold)!important;border-radius:6px}}
+{ROUND}{{border-radius:4px!important;font-weight:700!important;letter-spacing:.14em!important}}
+{IMGS}{{border-radius:6px;overflow:hidden}}
+.divider{{height:8px;width:96px;background:repeating-linear-gradient(-45deg,var(--gold) 0 8px,transparent 8px 16px)}}
+.service-item:hover{{background:var(--gold)!important}}
+.service-item:hover .service-name,.service-item:hover .service-desc{{color:var(--dark)!important}}"""),
+    dict(key="natur", name="Natur & Bio",
+         text_de="Bilder in fließenden Formen, weiche Farbflächen, warme Serifenschrift – herzlich, für Naturfriseure.",
+         head="Lora", body="Nunito", gfonts="family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Nunito:wght@300;400;600",
+         css=f"""
+.hero-pattern,.hero-scroll{{display:none}}
 .hero-bg{{background:var(--dark)}}
-.hero-glow,.hero-scroll{{display:none}}
-.hero-pattern{{opacity:.09;background-image:linear-gradient(var(--text) 1px,transparent 1px),linear-gradient(90deg,var(--text) 1px,transparent 1px);background-size:48px 48px}}
-.hero-content{{max-width:60%}}
-.hero::after{{content:"";position:absolute;right:6vw;top:calc(var(--nav-height) + 9vh);width:28vw;aspect-ratio:4/5;
-  background:url('{{HERO_IMG}}') center/cover;border:3px solid var(--text);box-shadow:14px 14px 0 var(--gold)}}
-.hero-title,.section-title{{text-transform:uppercase;letter-spacing:-0.01em;line-height:.98;font-weight:400}}
-.hero-title em,.section-title em{{font-style:normal;background:var(--gold);color:var(--dark);padding:0 .15em}}
-.section-label,.hero-eyebrow{{font-family:'Space Mono',monospace;text-transform:uppercase;color:var(--text)}}
-{BOXES}{{border:3px solid var(--text)!important;box-shadow:8px 8px 0 var(--text);border-radius:0}}
-{ROUND}{{border:3px solid var(--text)!important;box-shadow:4px 4px 0 var(--text);border-radius:0!important}}
-{IMGS}{{border:3px solid var(--text)}}
-.services-grid{{border:3px solid var(--text)!important}}
-.service-item{{border-right:3px solid var(--text)!important}}
-.divider{{height:6px;width:100px}}
+.hero-glow{{width:560px;height:560px;right:4vw;background:color-mix(in srgb,var(--gold) 18%,transparent);
+  border-radius:42% 58% 63% 37% / 41% 44% 56% 59%}}
+.hero-content{{max-width:55%}}
+.hero::after{{content:"";position:absolute;right:8vw;top:calc(var(--nav-height) + 8vh);bottom:10vh;width:min(32vw,440px);
+  background:url('{{HERO_IMG}}') center/cover;border-radius:62% 38% 46% 54% / 60% 44% 56% 40%;box-shadow:0 30px 60px rgba(0,0,0,.15)}}
+.hero-title,.section-title{{font-weight:500;letter-spacing:-0.01em}}
+.section-label{{text-transform:none;letter-spacing:.03em;font-weight:600;font-size:.9rem}}
+.section-label::before{{content:"❧ "}}
+{IMGS}{{border-radius:46% 54% 42% 58% / 52% 40% 60% 48%;overflow:hidden}}
+.map-container{{border-radius:32px!important}}
+{BOXES}{{border-radius:32px;border:none!important;background:var(--mid)}}
+{ROUND}{{border-radius:999px!important}}
+.divider{{height:6px;width:60px;border-radius:6px}}
+.services-grid{{border:none!important;gap:1.2rem;padding:2.5rem 5vw}}
+.service-item{{border:none!important;border-radius:36px;background:var(--mid)}}
+input,select,textarea{{border-radius:16px!important}}
 @media (max-width:900px){{.hero::after{{display:none}}.hero-content{{max-width:100%}}}}"""),
     dict(key="luxus-gerahmt", name="Luxus Gerahmt",
-         text_de="Vollbild-Foto im Doppelrahmen, Ornamente, Versalien – wie ein Luxushotel.",
+         text_de="Vollbild-Foto im Doppelrahmen, Ornamente, Versalien – wie ein Luxushotel, für Premium-Salons.",
          head="Cinzel", body="Montserrat", gfonts="family=Cinzel:wght@400;500;600&family=Montserrat:wght@300;400;500",
          css=f"""
 .hero{{justify-content:center;text-align:center}}
@@ -220,6 +244,7 @@ nav{{border-bottom:3px solid var(--text)}}
   outline:1px solid color-mix(in srgb,var(--gold) 45%,transparent);outline-offset:-10px;z-index:1;pointer-events:none}}
 .hero-content{{margin:0 auto;max-width:860px}}
 .hero-subtitle{{margin-left:auto;margin-right:auto}}
+.hero-actions{{justify-content:center}}
 .hero-title{{text-transform:uppercase;letter-spacing:.06em;font-weight:400;font-size:clamp(2.6rem,6vw,5rem)}}
 .hero-title em,.section-title em{{font-style:normal;color:var(--gold)}}
 .section-title{{text-transform:uppercase;letter-spacing:.06em;font-weight:400}}
@@ -231,29 +256,31 @@ nav{{border-bottom:3px solid var(--text)}}
 {ROUND}{{letter-spacing:.22em!important}}
 .nav-logo{{text-transform:uppercase;letter-spacing:.14em}}
 footer{{border-top:3px double var(--gold)!important}}"""),
-    dict(key="organisch", name="Organisch Weich",
-         text_de="Bilder in fließenden Formen, weiche Farbflecken, runde Schrift – natürlich und herzlich.",
-         head="Quicksand", body="Nunito", gfonts="family=Quicksand:wght@400;500;600;700&family=Nunito:wght@300;400;600",
+    dict(key="freundlich", name="Freundlich & Nah",
+         text_de="Großes Foto mit heller Textkarte, Etiketten und runde Karten – nahbar, für den Salon um die Ecke.",
+         head="Poppins", body="Nunito Sans", gfonts="family=Poppins:wght@400;500;600;700&family=Nunito+Sans:wght@300;400;600",
          css=f"""
-.hero-pattern,.hero-scroll{{display:none}}
-.hero-bg{{background:var(--dark)}}
-.hero-glow{{width:560px;height:560px;right:4vw;background:color-mix(in srgb,var(--gold) 18%,transparent);
-  border-radius:42% 58% 63% 37% / 41% 44% 56% 59%}}
-.hero-content{{max-width:55%}}
-.hero::after{{content:"";position:absolute;right:8vw;top:calc(var(--nav-height) + 8vh);bottom:10vh;width:min(32vw,440px);
-  background:url('{{HERO_IMG}}') center/cover;border-radius:62% 38% 46% 54% / 60% 44% 56% 40%;box-shadow:0 30px 60px rgba(0,0,0,.15)}}
-.hero-title,.section-title{{font-weight:700;letter-spacing:-0.01em}}
+.hero{{align-items:flex-end;padding-bottom:9vh}}
+.hero-bg{{background:url('{{HERO_IMG}}') center/cover}}
+.hero-pattern,.hero-glow,.hero-scroll{{display:none}}
+.hero-content{{margin-left:5vw;padding:2.6rem 3rem;max-width:640px;background:var(--dark);border-radius:28px;
+  box-shadow:0 30px 70px rgba(0,0,0,.28)}}
+.hero-title{{font-size:clamp(2.3rem,4.4vw,3.7rem);font-weight:700;letter-spacing:-0.02em}}
 .hero-title em,.section-title em{{font-style:normal}}
-.section-label{{text-transform:none;letter-spacing:.03em;font-weight:600;font-size:.9rem}}
-{IMGS}{{border-radius:46% 54% 42% 58% / 52% 40% 60% 48%;overflow:hidden}}
-.map-container{{border-radius:32px!important}}
-{BOXES}{{border-radius:32px;border:none!important;background:var(--mid)}}
-{ROUND}{{border-radius:999px!important}}
-.divider{{height:6px;width:60px;border-radius:6px}}
-.services-grid{{border:none!important;gap:1.2rem;padding:2.5rem 5vw}}
-.service-item{{border:none!important;border-radius:36px;background:var(--mid)}}
-input,select,textarea{{border-radius:16px!important}}
-@media (max-width:900px){{.hero::after{{display:none}}.hero-content{{max-width:100%}}}}"""),
+.hero-subtitle{{max-width:none}}
+.section-title{{font-weight:700;letter-spacing:-0.02em}}
+.hero-eyebrow,.section-label{{display:inline-block;background:color-mix(in srgb,var(--gold) 14%,transparent);padding:.3rem .95rem;
+  border-radius:999px;text-transform:none;letter-spacing:.02em;font-weight:600;font-size:.85rem}}
+.nav-links a{{text-transform:none;letter-spacing:0;font-size:.92rem;font-weight:500}}
+nav{{border-bottom:none;box-shadow:0 2px 18px rgba(0,0,0,.08)}}
+{ROUND}{{border-radius:12px!important;text-transform:none!important;letter-spacing:.02em!important;font-weight:600!important;font-size:.92rem!important}}
+{BOXES}{{border-radius:20px;border:none!important;border-top:4px solid var(--gold)!important;box-shadow:0 10px 30px rgba(0,0,0,.08)}}
+{IMGS}{{border-radius:20px;overflow:hidden}}
+.services-grid{{border:none!important;gap:1rem;padding:2rem 5vw}}
+.service-item{{border:none!important;border-radius:20px;background:var(--mid)}}
+.divider{{height:4px;width:44px;border-radius:4px}}
+input,select,textarea{{border-radius:12px!important}}
+@media (max-width:900px){{.hero-content{{margin:0 4vw;padding:2rem 1.6rem}}}}"""),
 ]
 
 
