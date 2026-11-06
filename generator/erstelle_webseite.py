@@ -128,8 +128,8 @@ def finalize(cfg, google, changed):
             st["label"] = "Salon in " + (city or "der Stadt")
 
 
-def prepare_pages(target, cfg, design):
-    """config.js schreiben, Vorschau sperren (noindex), Design anwenden, Schriften lokal einbinden."""
+def prepare_pages(target, cfg, design, farbe):
+    """config.js schreiben, Vorschau sperren (noindex), Design + Farbkonzept anwenden, Schriften lokal einbinden."""
     write_config(cfg, target)
     for f in os.listdir(target):
         if f.endswith(".html"):
@@ -138,53 +138,82 @@ def prepare_pages(target, cfg, design):
             if 'name="robots"' not in s:
                 s = s.replace("<head>", '<head>\n  <meta name="robots" content="noindex,nofollow">', 1)
             open(fp, "w", encoding="utf-8").write(s)
-    designs.apply(target, design)
+    hero = (cfg.get("GALLERY") or [{"src": "images/salon.png"}])[0]["src"]
+    designs.apply(target, design, farbe, hero)
     localize_fonts(target)
 
 
 def shot(html_file, png, size="1280,1700"):
-    subprocess.run([CHROME, "--headless", "--disable-gpu", "--hide-scrollbars", f"--window-size={size}",
-                    "--virtual-time-budget=4000", f"--screenshot={png}", "file://" + html_file],
-                   capture_output=True, timeout=120)
+    """Bildschirmfoto; Einblend-Animationen dafür abgeschaltet (temporäre Kopie der Seite)."""
+    tmp = os.path.join(os.path.dirname(html_file), "_shot_" + os.path.basename(html_file))
+    s = open(html_file, encoding="utf-8").read().replace(
+        "</head>", "<style>.fade-in{opacity:1!important;transform:none!important}"
+                   "*{animation-delay:0s!important;animation-duration:0s!important}</style></head>", 1)
+    open(tmp, "w", encoding="utf-8").write(s)
+    try:
+        subprocess.run([CHROME, "--headless", "--disable-gpu", "--hide-scrollbars", f"--window-size={size}",
+                        "--virtual-time-budget=4000", f"--screenshot={png}", "file://" + tmp],
+                       capture_output=True, timeout=120)
+    finally:
+        os.remove(tmp)
 
 
-def all_designs(out, cfg):
-    """Alle Designs als eigene Seiten unter out/designs/NN-name/ (Bilder geteilt), dazu Übersicht + PDF."""
+def _variant(out, base, name, cfg, design, farbe):
+    v = os.path.join(base, name)
+    os.makedirs(v)
+    for f in os.listdir(ROOT):
+        if f.endswith((".html", ".css", ".js")):
+            shutil.copy(os.path.join(ROOT, f), v)
+    os.symlink(os.path.relpath(os.path.join(out, "images"), v), os.path.join(v, "images"))
+    prepare_pages(v, cfg, design, farbe)
+    png, png2 = os.path.join(base, name + ".png"), os.path.join(base, name + "-leistungen.png")
+    shot(os.path.join(v, "index.html"), png, "1280,820")
+    shot(os.path.join(v, "leistungen.html"), png2, "1280,1400")
+    return os.path.relpath(png, out), os.path.relpath(png2, out), os.path.relpath(os.path.join(v, "index.html"), out)
+
+
+def all_designs(out, cfg, design, farbe):
+    """Auswahl für den Kunden: Teil A die Designs (im gewählten Farbkonzept), Teil B die 10 Farbkonzepte (im
+    gewählten Design). Varianten unter out/designs/ (Bilder geteilt), Übersicht als HTML + PDF."""
     base = os.path.join(out, "designs")
     if os.path.exists(base):
         shutil.rmtree(base)
     os.makedirs(base)
-    cards = []
+
+    def card(nr, title, text, sub, imgs, swatches):
+        img, img2, link = imgs
+        sw = "".join(f"<span style=background:{c}></span>" for c in swatches)
+        return (f"<div class='c'><a href='{link}'><img src='{img}'><img class='l' src='{img2}'></a>"
+                f"<h2>{nr}. {html.escape(title)}</h2><p>{html.escape(text)}</p><p class='f'>{html.escape(sub)}</p>"
+                f"<div class='sw'>{sw}</div></div>")
+
+    part_a = []
     for i, d in enumerate(designs.DESIGNS, 1):
-        v = os.path.join(base, f"{i:02d}-{d['key']}")
-        os.makedirs(v)
-        for f in os.listdir(ROOT):
-            if f.endswith((".html", ".css", ".js")):
-                shutil.copy(os.path.join(ROOT, f), v)
-        os.symlink(os.path.relpath(os.path.join(out, "images"), v), os.path.join(v, "images"))
-        prepare_pages(v, cfg, d)
-        png = os.path.join(base, f"{i:02d}-{d['key']}.png")
-        png2 = os.path.join(base, f"{i:02d}-{d['key']}-leistungen.png")
-        shot(os.path.join(v, "index.html"), png, "1280,820")
-        shot(os.path.join(v, "leistungen.html") + "#schnitt", png2, "1280,1400")
-        cards.append((i, d, os.path.relpath(png, out), os.path.relpath(png2, out),
-                      os.path.relpath(os.path.join(v, "index.html"), out)))
-        print(f"  Design {i:2d} {d['name']} fertig", flush=True)
-    items = "".join(
-        f"<div class='c'><a href='{link}'><img src='{img}'><img class='l' src='{img2}'></a><h2>{i}. {html.escape(d['name'])}</h2>"
-        f"<p>{html.escape(d['text_de'])}</p><p class='f'>Schriften: {html.escape(d['head'])} / {html.escape(d['body'])}</p>"
-        f"<div class='sw'>{''.join(f'<span style=background:{c}></span>' for c in (d['dark'], d['mid'], d['accent'], d['text']))}</div></div>"
-        for i, d, img, img2, link in cards)
+        imgs = _variant(out, base, f"design-{i}-{d['key']}", cfg, d, farbe)
+        part_a.append(card(i, d["name"], d["text_de"], f"Schriften: {d['head']} / {d['body']}", imgs,
+                           (farbe["dark"], farbe["mid"], farbe["accent"], farbe["text"])))
+        print(f"  Design {i} {d['name']} fertig", flush=True)
+    part_b = []
+    for i, f in enumerate(designs.FARBEN, 1):
+        imgs = _variant(out, base, f"farbe-{i:02d}-{f['key']}", cfg, design, f)
+        part_b.append(card(i, f["name"], f["text_de"], "hell" if f["mode"] == "light" else "dunkel", imgs,
+                           (f["dark"], f["mid"], f["accent"], f["text"])))
+        print(f"  Farbkonzept {i:2d} {f['name']} fertig", flush=True)
     doc = f"""<!doctype html><html lang="de"><meta charset="utf-8"><title>Designauswahl {html.escape(cfg['SALON_NAME'])}</title>
 <style>body{{font-family:Helvetica,Arial,sans-serif;margin:32px;color:#222}} h1{{margin:0 0 4px}} .sub{{color:#666;margin-bottom:20px}}
+h3{{margin:28px 0 4px;font-size:16pt}} .part{{page-break-before:always}}
 .g{{display:grid;grid-template-columns:1fr 1fr;gap:22px}} .c{{border:1px solid #ddd;border-radius:8px;padding:12px;page-break-inside:avoid}}
 .c img{{width:100%;aspect-ratio:1280/820;object-fit:cover;object-position:top;border-radius:4px;border:1px solid #eee}}
-.c img.l{{aspect-ratio:1280/560;object-position:0 62%;margin-top:6px}}
+.c img.l{{aspect-ratio:1280/520;object-position:0 70%;margin-top:6px}}
 .c h2{{font-size:14pt;margin:8px 0 2px}} .c p{{margin:2px 0;font-size:10pt}} .f{{color:#777}}
 .sw span{{display:inline-block;width:26px;height:16px;margin:6px 4px 0 0;border:1px solid #ccc;border-radius:3px}}</style>
 <h1>Designauswahl für {html.escape(cfg['SALON_NAME'])}</h1>
-<div class="sub">10 Designs mit Ihren Inhalten – Bild anklicken für die Vorschau. Bitte nennen Sie uns die Nummer Ihres Favoriten.</div>
-<div class="g">{items}</div></html>"""
+<div class="sub">Wählen Sie <b>ein Design</b> (Aufbau, Formen, Schriften) und <b>ein Farbkonzept</b> – beides ist frei kombinierbar.
+Bild anklicken für die Vorschau mit Ihren Inhalten. Bitte nennen Sie uns beide Nummern, z. B. „Design 2, Farbe 4“.</div>
+<h3>A · {len(designs.DESIGNS)} Designs <span style="font-weight:normal;color:#777">(gezeigt im Farbkonzept {html.escape(farbe['name'])})</span></h3>
+<div class="g">{''.join(part_a)}</div>
+<div class="part"><h3>B · {len(designs.FARBEN)} Farbkonzepte <span style="font-weight:normal;color:#777">(gezeigt im Design {html.escape(design['name'])})</span></h3>
+<div class="g">{''.join(part_b)}</div></div></html>"""
     sel = os.path.join(out, "designauswahl.html")
     open(sel, "w", encoding="utf-8").write(doc)
     pdf = os.path.join(out, "designauswahl.pdf")
@@ -265,8 +294,10 @@ def main():
     ap.add_argument("link", nargs="?", default="", help="Google-Maps-Link des Salons (optional mit --excel)")
     ap.add_argument("--excel", help="ausgefüllte Salon-Daten (Vorlage: generator/excel_daten.py vorlage)")
     ap.add_argument("--nicht-oeffnen", action="store_true", help="Vorschau und PDF nicht automatisch öffnen")
-    ap.add_argument("--design", help="Design-Nummer 1–10 oder Name (Standard: aus Excel, sonst 1 Gold Noir)")
-    ap.add_argument("--alle-designs", action="store_true", help="alle 10 Designs + Übersicht/PDF zur Kundenauswahl")
+    ap.add_argument("--design", help="Design 1–10 oder Name (Standard: aus Excel, sonst 1 Klassik Elegant)")
+    ap.add_argument("--farbe", help="Farbkonzept 1–10 oder Name (Standard: aus Excel, sonst 1 Gold Noir)")
+    ap.add_argument("--alle-designs", action="store_true",
+                    help="Kundenauswahl: 10 Designs + 10 Farbkonzepte als Übersicht/PDF")
     args = ap.parse_args()
     link = args.link or ("" if args.excel else input("Google-Maps-Link: ").strip())
     if not link and not args.excel:
@@ -296,15 +327,16 @@ def main():
         changed = apply_excel(args.excel, cfg, out)
         print(f"Aus Excel übernommen: {', '.join(changed) if changed else 'nichts (Datei leer?)'}")
         finalize(cfg, google=bool(p), changed=changed)
-    design = designs.get(args.design or cfg.pop("DESIGN", "") or "")
-    cfg.pop("DESIGN", None)
-    prepare_pages(out, cfg, design)
-    print(f"Design: {design['name']}")
+    design = designs.get_design(args.design or cfg.get("DESIGN", ""))
+    farbe = designs.get_farbe(args.farbe or cfg.get("FARBE", ""))
+    cfg.pop("DESIGN", None); cfg.pop("FARBE", None)
+    prepare_pages(out, cfg, design, farbe)
+    print(f"Design: {design['name']}, Farbkonzept: {farbe['name']}")
     pdf = offer_pdf(cfg, out)
     print(f"Vorschau: {out}/index.html\nAngebot:  {pdf}")
     to_open = [os.path.join(out, "index.html"), pdf]
     if args.alle_designs:
-        sel_html, sel_pdf = all_designs(out, cfg)
+        sel_html, sel_pdf = all_designs(out, cfg, design, farbe)
         print(f"Designauswahl: {sel_html}\nDesignauswahl-PDF: {sel_pdf}")
         to_open = [sel_html, sel_pdf, pdf]
     if sys.platform == "darwin" and not args.nicht_oeffnen:

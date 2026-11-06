@@ -6,26 +6,31 @@ GOOGLE_MAPS_API_KEY=<Schlüssel> .venv/bin/python generator/erstelle_webseite.py
 ```
 Link und Excel sind jeweils optional (mindestens eins von beiden). `--nicht-oeffnen` unterdrückt das automatische Öffnen.
 
-## Designs (10 zur Auswahl)
-`--design <1–10 oder Name>` wählt ein Design (oder Feld „Design“ im Blatt Grunddaten der Excel), Standard 1.
-`--alle-designs` erzeugt zusätzlich alle 10 Varianten unter `vorschau/<salon>/designs/` (Bilder geteilt) sowie
-`designauswahl.html` und `designauswahl.pdf` mit Vorschaubildern (Startseite + Leistungen) zum Vorlegen beim Kunden.
+## Designs und Farbkonzepte (10 x 10, frei kombinierbar)
+`--design 1–10` (Aufbau, Formen, Typografie, Schriften) und `--farbe 1–10` (Farbpalette), alternativ die Felder
+„Design“ und „Farbe“ im Blatt Grunddaten der Excel. Standard: Design 1, Farbe 1.
+`--alle-designs` erzeugt die Kundenauswahl `designauswahl.html`/`.pdf`: Teil A die 10 Designs (im gewählten
+Farbkonzept), Teil B die 10 Farbkonzepte (im gewählten Design), je mit Startseite und Leistungsseite; Varianten
+unter `vorschau/<salon>/designs/` (Bilder geteilt, Klick öffnet die komplette Seite).
 
-| Nr. | Design | Stil | Schriften |
-|---|---|---|---|
-| 1 | Gold Noir | dunkel, Gold (Original) | Cormorant Garamond / Jost |
-| 2 | Champagner Hell | Creme, dunkles Gold | Cormorant Garamond / Jost |
-| 3 | Rosé Blush | Rosé, feminin | Playfair Display / Lato |
-| 4 | Salbei Natur | Salbeigrün, natürlich | Lora / Nunito Sans |
-| 5 | Nordic Minimal | Schwarz-Weiß, reduziert | Manrope / Inter |
-| 6 | Midnight Blau | Nachtblau, heller Akzent | DM Serif Display / DM Sans |
-| 7 | Barber Industrial | Anthrazit, Kupfer (Barbershop) | Oswald / Barlow |
-| 8 | Smaragd Luxus | Smaragdgrün, Gold | Cinzel / Montserrat |
-| 9 | Terracotta Boho | Sand, Terrakotta | Fraunces / Work Sans |
-| 10 | Lavendel Modern | Lavendel, kreativ | Josefin Sans / Karla |
+| Nr. | Design | Startbereich | Formen / Details | Schriften |
+|---|---|---|---|---|
+| 1 | Klassik Elegant | Text auf Farbverlauf | feine Linien, eckig | Cormorant Garamond / Jost |
+| 2 | Modern Split | Text links, Foto rechts | rund, weiche Schatten | Manrope / Inter |
+| 3 | Bold Statement | Vollbild-Foto, zentriert, Großbuchstaben | kräftige Rahmen, Akzentbalken | Oswald / Barlow |
+| 4 | Boutique Bogen | Foto im Torbogen | Bögen, Pillen-Schaltflächen, ✦ | Playfair Display / Lato |
+| 5 | Minimal Editorial | große Magazin-Schrift, kleines S/W-Foto | nur Linien, S/W-Bilder | Bodoni Moda / Inter |
+| 6 | Glass Soft | weichgezeichnetes Foto, Text auf Glasfläche | durchscheinende Karten, Unschärfe | Plus Jakarta Sans |
+| 7 | Retro Salon | rundes Foto mit Ring, Streifen unten | dicke Rahmen, Pillen-Etiketten | Abril Fatface / Poppins |
+| 8 | Brutalist | Raster, Foto im Kasten mit versetztem Schatten | harte Rahmen und Schatten, Markierung | Archivo Black / Space Grotesk |
+| 9 | Luxus Gerahmt | Vollbild-Foto im Doppelrahmen, zentriert | Doppelrahmen, ◆-Ornamente, Versalien | Cinzel / Montserrat |
+| 10 | Organisch Weich | Foto in fließender Form, Farbfleck | organische Bildformen, sehr rund | Quicksand / Nunito |
 
-Neue Designs: Eintrag in `generator/designs.py` ergänzen (Akzentfarbe muss stark zum Hintergrund kontrastieren,
-weil Text auf Schaltflächen die Hintergrundfarbe nutzt).
+Farbkonzepte: 1 Gold Noir, 2 Champagner, 3 Rosé, 4 Salbei, 5 Schwarz-Weiß, 6 Midnight, 7 Anthrazit & Kupfer,
+8 Smaragd, 9 Terracotta, 10 Lavendel.
+
+Erweitern in `generator/designs.py`: Designs sind CSS-Ergänzungen (`design.css`, wird zuletzt geladen; `{HERO_IMG}` =
+Titelbild = erstes Galeriebild), Farbkonzepte sind Paletten (Akzent muss stark zum Hintergrund kontrastieren).
 
 ## Salon-Daten per Excel
 - Leere Vorlage: `generator/salon_daten_vorlage.xlsx` (neu erzeugen mit `.venv/bin/python generator/excel_daten.py vorlage`).
