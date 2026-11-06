@@ -24,6 +24,7 @@ const SALON_CONFIG = {
   WHATSAPP:         "4989462483550",
 
   // ── SOCIAL MEDIA ─────────────────────────────────────────
+  MARKEN:           "",   // z. B. "Wella, Olaplex, Davines" – leer = Zeile ausgeblendet
   INSTAGRAM_HANDLE: "@lisas.hairstyling",
   INSTAGRAM_URL:    "https://www.instagram.com/lisas.hairstyling",
   FACEBOOK_URL:     "https://www.facebook.com/lisashairstylingmuenchen",

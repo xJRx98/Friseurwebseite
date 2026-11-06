@@ -31,6 +31,7 @@ GRUNDDATEN = [  # (Schlüssel, Bezeichnung, Hinweis)
     ("PHONE", "Telefon", "leer = aus Google"),
     ("EMAIL", "E-Mail", "Kontakt-E-Mail des Salons"),
     ("WHATSAPP", "WhatsApp-Nummer", "nur Ziffern mit Ländervorwahl, z. B. 4917612345678"),
+    ("MARKEN", "Produktmarken", "z. B. Wella, Olaplex, Davines – erscheint auf der Startseite als „Wir arbeiten mit …“"),
     ("INSTAGRAM_HANDLE", "Instagram-Name", "z. B. @salonname"),
     ("INSTAGRAM_URL", "Instagram-Link", "https://www.instagram.com/…"),
     ("FACEBOOK_URL", "Facebook-Link", "https://www.facebook.com/…"),

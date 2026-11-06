@@ -32,16 +32,16 @@ November 2026): die dort häufigsten Stilrichtungen und Farbfamilien, nachempfun
 
 | Nr. | Design | Startbereich | Formen / Details | Schriften |
 |---|---|---|---|---|
-| 1 | Klassik Vollbild | Salonfoto vollflächig, dunkler Verlauf, Text links | feine Linien, eckig | Cormorant Garamond / Jost |
-| 2 | Hell & Luftig | zentrierter Text, Foto als breites Band unten | viel Weißraum, Versalien, nur Linien | Josefin Sans / Raleway |
+| 1 | Klassik Vollbild | Salonfoto vollflächig, dunkler Verlauf, Text links | feine Linien, eckig | Playfair Display / Open Sans |
+| 2 | Hell & Luftig | zentrierter Text, Foto als breites Band unten | viel Weißraum, Versalien, nur Linien | Josefin Sans / Lato |
 | 3 | Modern Split | Text links, Foto rechts | rund, weiche Schatten | Montserrat / Open Sans |
-| 4 | Typo-Statement | Vollbild-Foto, riesige Großbuchstaben | kräftige Rahmen, Akzentbalken | Oswald / Barlow |
+| 4 | Typo-Statement | Vollbild-Foto, riesige Großbuchstaben | kräftige Rahmen, Akzentbalken | Oswald / Roboto |
 | 5 | Editorial Schwarz-Weiß | große Magazin-Schrift, kleines S/W-Foto | nur Linien, S/W-Bilder | Bodoni Moda / Inter |
-| 6 | Boutique Handschrift | Foto im Torbogen, Schreibschrift-Akzente | Bögen, Pillen-Schaltflächen, ✦ | Playfair Display / Lato / Great Vibes |
+| 6 | Boutique Handschrift | Foto im Torbogen, Salonname in Schreibschrift | Bögen, Pillen-Schaltflächen, ✦ | Cormorant Garamond / Lato / Great Vibes |
 | 7 | Barbershop | dunkles Vollbild, Abzeichen, Barber-Streifen | Slab-Schrift, ✂, Streifen | Alfa Slab One / Roboto |
 | 8 | Natur & Bio | Foto in fließender Form, Farbfleck | organische Bildformen, ❧ | Lora / Nunito |
 | 9 | Luxus Gerahmt | Vollbild-Foto im Doppelrahmen, zentriert | Doppelrahmen, ◆-Ornamente, Versalien | Cinzel / Montserrat |
-| 10 | Freundlich & Nah | Vollbild-Foto mit heller Textkarte | Etiketten, runde Karten, Farbkante | Poppins / Nunito Sans |
+| 10 | Freundlich & Nah | Vollbild-Foto mit heller Textkarte | Etiketten, runde Karten, Farbkante | Poppins / Open Sans |
 
 Farbkonzepte: 1 Schwarz-Weiß, 2 Nude & Champagner, 3 Bordeaux, 4 Cognac & Creme, 5 Salbei & Leinen, 6 Marineblau,
 7 Beere & Rosé, 8 Gold Noir, 9 Anthrazit & Kupfer, 10 Petrol & Mint.

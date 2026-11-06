@@ -89,7 +89,7 @@ def build_config(name, p, out):
         "SALON_NAME": name, "TAGLINE": "Ihr Friseur in " + (city or "Ihrer Nähe") + ".", "GRUENDUNGSJAHR": "vielen Jahren",
         "STADT": city, "ADDRESS_STREET": street, "ADDRESS_ZIP": comp.get("postal_code", ""), "ADDRESS_CITY": city,
         "PHONE": p.get("nationalPhoneNumber", ""), "EMAIL": "", "WHATSAPP": intl if intl.startswith("491") else "",
-        "INSTAGRAM_HANDLE": "", "INSTAGRAM_URL": "#", "FACEBOOK_URL": "#",
+        "MARKEN": "", "INSTAGRAM_HANDLE": "", "INSTAGRAM_URL": "#", "FACEBOOK_URL": "#",
         "MAPS_EMBED_URL": f"https://www.google.com/maps?q={maps_q}&output=embed",
         "MAPS_LINK": p.get("googleMapsUri", f"https://maps.google.com/?q={maps_q}"),
         "GOOGLE_REVIEWS_URL": p.get("googleMapsUri", ""), "GOOGLE_RATING": rating, "GOOGLE_REVIEW_COUNT": count,

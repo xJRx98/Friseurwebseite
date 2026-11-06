@@ -9,7 +9,7 @@
     .price-category { margin-bottom: 4rem; }
     .category-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(201,169,110,0.2); }
     .category-icon { font-size: 1.6rem; }
-    .category-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; color: var(--text); }
+    .category-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 500; color: var(--text); }
     .price-table { width: 100%; border-collapse: collapse; }
     .price-table tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; }
     .price-table tr:hover { background: rgba(201,169,110,0.04); }
@@ -32,8 +32,7 @@
 
   <div class="page-content">
     <div class="page-hero">
-      <p class="section-label">Was wir für Sie tun</p>
-      <h1 class="section-title">Leistungen &<br><em>Preise</em></h1>
+      <h1 class="section-title">Leistungen &amp; Preise</h1>
       <div class="divider center"></div>
       <p style="color:var(--text-muted); max-width:500px; margin:0 auto; font-size:0.9rem;">Alle Preise sind Richtwerte. Je nach Haarlänge, -dichte und Aufwand können diese variieren. Gerne beraten wir Sie persönlich.</p>
     </div>
@@ -90,7 +89,7 @@
       container.innerHTML += `
         <div class="price-category fade-in" id="${key}" style="transition-delay:${idx * 0.1}s">
           <div class="category-header">
-            <span class="category-icon">${cat.icon}</span>
+            
             <h2 class="category-title">${cat.title}</h2>
           </div>
           <div class="price-grid">

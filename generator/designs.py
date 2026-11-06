@@ -61,29 +61,29 @@ ON_PHOTO = """.hero-title,.hero-eyebrow{color:#fff}
 DESIGNS = [
     dict(key="klassik", name="Klassik Vollbild",
          text_de="Salonfoto über die ganze Breite mit dunklem Verlauf, Text links in Serifenschrift – der häufigste Münchner Stil.",
-         head="Cormorant Garamond", body="Jost",
-         gfonts="family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500",
+         head="Playfair Display", body="Open Sans",
+         gfonts="family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Open+Sans:wght@400;500;600",
          css=f"""
 .hero-bg{{background:linear-gradient(90deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.5) 50%,rgba(0,0,0,.12) 100%),url('{{HERO_IMG}}') center/cover}}
 .hero-pattern,.hero-glow{{display:none}}
 {ON_PHOTO}"""),
     dict(key="hell", name="Hell & Luftig",
          text_de="Viel Weißraum, zentrierter Text in feinen Großbuchstaben, Foto als breites Band – ruhig und modern.",
-         head="Josefin Sans", body="Raleway", gfonts="family=Josefin+Sans:wght@300;400;600&family=Raleway:wght@300;400;500;600",
+         head="Josefin Sans", body="Lato", gfonts="family=Josefin+Sans:wght@300;400;600&family=Lato:wght@400;700",
          css=f"""
 .hero{{flex-direction:column;justify-content:flex-start;align-items:center;text-align:center;padding-top:calc(var(--nav-height) + 7vh)}}
 .hero-bg{{background:var(--dark)}}
 .hero-pattern,.hero-glow,.hero-scroll{{display:none}}
 .hero-content{{margin:0 auto;max-width:860px}}
-.hero-title{{font-size:clamp(2.2rem,4.4vw,3.6rem);font-weight:300;text-transform:uppercase;letter-spacing:.12em;line-height:1.2}}
+.hero-title{{font-size:clamp(2.2rem,4.2vw,3.4rem);font-weight:400;text-transform:uppercase;letter-spacing:.12em;line-height:1.2}}
 .hero-title em{{font-style:normal;font-weight:600}}
 .hero-subtitle{{margin-left:auto;margin-right:auto}}
 .hero-actions{{justify-content:center}}
 .hero::after{{content:"";position:absolute;left:5vw;right:5vw;bottom:0;height:33vh;background:url('{{HERO_IMG}}') center 35%/cover}}
 nav{{border-bottom:1px solid {LINE}}}
 .nav-logo{{text-transform:uppercase;letter-spacing:.3em;font-weight:400;font-size:1.2rem}}
-.nav-links a{{letter-spacing:.22em;font-size:.72rem}}
-.section-title{{text-transform:uppercase;letter-spacing:.1em;font-weight:300}}
+.nav-links a{{text-transform:uppercase;letter-spacing:.14em;font-size:.8rem}}
+.section-title{{text-transform:uppercase;letter-spacing:.1em;font-weight:400}}
 .section-title em{{font-style:normal;font-weight:600}}
 .section-label{{letter-spacing:.35em}}
 .divider{{width:40px}}
@@ -116,13 +116,13 @@ input,select,textarea{{border-radius:12px!important}}
 @media (max-width:900px){{.hero::after{{width:100%;border-radius:0;opacity:.18;top:0;bottom:0}}.hero-content{{max-width:100%}}}}"""),
     dict(key="statement", name="Typo-Statement",
          text_de="Vollbild-Foto, riesige zentrierte Großbuchstaben, kräftige Rahmen – selbstbewusst, für junge Salons.",
-         head="Oswald", body="Barlow", gfonts="family=Oswald:wght@400;500;600&family=Barlow:wght@300;400;500;600",
+         head="Oswald", body="Roboto", gfonts="family=Oswald:wght@400;500;600&family=Roboto:wght@400;500;700",
          css=f"""
 .hero{{justify-content:center;text-align:center}}
 .hero-bg{{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.7)),url('{{HERO_IMG}}') center/cover}}
 .hero-pattern,.hero-glow{{display:none}}
 .hero-content{{max-width:960px;margin:0 auto}}
-.hero-title{{text-transform:uppercase;font-weight:600;letter-spacing:.02em;font-size:clamp(3rem,8vw,6.5rem)}}
+.hero-title{{text-transform:uppercase;font-weight:600;letter-spacing:.02em;font-size:clamp(2.8rem,6vw,5rem)}}
 .hero-title em{{font-style:normal}}
 .hero-subtitle{{margin-left:auto;margin-right:auto}}
 .hero-actions{{justify-content:center}}
@@ -144,14 +144,14 @@ input,select,textarea{{border-radius:12px!important}}
 .hero-bg{{background:var(--dark)}}
 .hero-pattern,.hero-glow,.hero-scroll{{display:none}}
 .hero-content{{max-width:1100px}}
-.hero-title{{font-size:clamp(3.8rem,9vw,8.5rem);line-height:.95;letter-spacing:-0.03em;font-weight:400}}
+.hero-title{{font-size:clamp(3rem,6.5vw,5.8rem);line-height:1;letter-spacing:-0.03em;font-weight:400}}
 .hero-title em{{color:var(--text);text-decoration:underline;text-decoration-color:var(--gold);
   text-decoration-thickness:3px;text-underline-offset:12px}}
 .hero::after{{content:"";position:absolute;right:5vw;top:calc(var(--nav-height) + 6vh);width:20vw;aspect-ratio:3/4;
   background:url('{{HERO_IMG}}') center/cover;filter:grayscale(1)}}
 nav{{border-bottom:1px solid var(--text)}}
 .nav-links a{{color:var(--text)}}
-.section-title{{font-size:clamp(2.4rem,5vw,4.2rem);letter-spacing:-0.02em;font-weight:400}}
+.section-title{{font-size:clamp(2rem,3.6vw,3rem);letter-spacing:-0.02em;font-weight:400}}
 .section-label{{font-weight:600;color:var(--text)}}
 .divider{{display:none}}
 {BOXES}{{background:transparent!important;border:none!important;border-top:1px solid var(--text)!important;padding-left:0;padding-right:0}}
@@ -162,9 +162,9 @@ nav{{border-bottom:1px solid var(--text)}}
 .gallery-img:hover img,.team-member-img:hover img,.about-img-wrap:hover img,.gallery-item:hover img{{filter:none}}
 @media (max-width:900px){{.hero::after{{display:none}}}}"""),
     dict(key="boutique", name="Boutique Handschrift",
-         text_de="Schreibschrift-Akzente, Foto im Torbogen, Pillen-Schaltflächen – feminin und persönlich wie ein kleiner Salon.",
-         head="Playfair Display", body="Lato",
-         gfonts="family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Great+Vibes",
+         text_de="Salonname in Schreibschrift, Foto im Torbogen, Pillen-Schaltflächen – feminin und persönlich wie ein kleiner Salon.",
+         head="Cormorant Garamond", body="Lato",
+         gfonts="family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Lato:wght@400;700&family=Great+Vibes",
          css=f"""
 .hero-pattern,.hero-glow{{display:none}}
 .hero-content{{max-width:55%}}
@@ -172,7 +172,9 @@ nav{{border-bottom:1px solid var(--text)}}
   background:url('{{HERO_IMG}}') center/cover;border-radius:999px 999px 0 0;
   box-shadow:0 0 0 12px var(--dark),0 0 0 13px var(--gold)}}
 .hero-title em,.section-title em{{font-family:'Great Vibes',cursive;font-style:normal;font-weight:400;font-size:1.3em;line-height:1}}
-.nav-logo{{font-family:'Great Vibes',cursive;font-size:2.1rem;letter-spacing:0}}
+.nav-logo,.hero-title,.footer-logo{{font-family:'Great Vibes',cursive;letter-spacing:0;font-weight:400}}
+.nav-logo{{font-size:2.1rem}}
+.hero-title{{font-size:clamp(3.2rem,6vw,5.2rem);line-height:1.1}}
 .about-img-wrap,.team-member-img,.gallery-item,.gallery-img{{border-radius:999px 999px 0 0;overflow:hidden}}
 {BOXES}{{border-radius:28px}}
 {ROUND}{{border-radius:999px!important}}
@@ -258,7 +260,7 @@ input,select,textarea{{border-radius:16px!important}}
 footer{{border-top:3px double var(--gold)!important}}"""),
     dict(key="freundlich", name="Freundlich & Nah",
          text_de="Großes Foto mit heller Textkarte, Etiketten und runde Karten – nahbar, für den Salon um die Ecke.",
-         head="Poppins", body="Nunito Sans", gfonts="family=Poppins:wght@400;500;600;700&family=Nunito+Sans:wght@300;400;600",
+         head="Poppins", body="Open Sans", gfonts="family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@400;500;600",
          css=f"""
 .hero{{align-items:flex-end;padding-bottom:9vh}}
 .hero-bg{{background:url('{{HERO_IMG}}') center/cover}}
